@@ -21,4 +21,4 @@ Secure Transactions: The platform prioritizes secure transactions, providing a s
 
 Overall, EnthusiastList is a go-to destination for individuals passionate about cars, offering a seamless and efficient platform for buying and selling vehicles while fostering a sense of community among automotive enthusiasts.
 
-![alt text](https://i.imgur.com/VldSR5V.png)
+![alt text](https://i.imgur.com/g53v1Q3.png)

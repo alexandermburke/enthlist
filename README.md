@@ -20,3 +20,5 @@ Mobile-Friendly Design: EnthusiastList is designed to be mobile-friendly, enabli
 Secure Transactions: The platform prioritizes secure transactions, providing a safe environment for buyers and sellers to conduct business transactions.
 
 Overall, EnthusiastList is a go-to destination for individuals passionate about cars, offering a seamless and efficient platform for buying and selling vehicles while fostering a sense of community among automotive enthusiasts.
+
+![alt text](https://i.imgur.com/VldSR5V.png)

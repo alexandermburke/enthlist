@@ -1,0 +1,20 @@
+
+
+$25 to have car sale post uploaded to social media pages
+
+Different tiers of subscription
+$3 - enthusiast tier - 
+$15 - business tier - upload 5 cars per month, each will automatically be posted to social media pages
+$50 - Dealership tier - upload 15 cars per month1
+
+
+-- TODO LIST
+
+○ Carousel effect on main page for Graphic Overlay
+○ Start browse section based off of smoljames/post (utilize firebase to make a db for listings)
+○ Finish login with verify email & two step login capability
+○ App
+○ Make new listing slides top cars
+○ Search bar with RegisterBtn
+○ Use cards for each listing (similar to carfax app)
+○ View counter for db (can be utilized to keep track of most popular listings)

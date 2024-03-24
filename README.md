@@ -1,5 +1,7 @@
 # enthlist
 
+![alt text](https://i.imgur.com/g53v1Q3.png)
+
 
 EnthusiastList is a dynamic online platform designed specifically for marketing cars for sale, catering to automotive enthusiasts and buyers alike. With a user-friendly interface and robust features, EnthusiastList provides a seamless experience for sellers to showcase their vehicles and for buyers to find their dream cars.
 
@@ -20,5 +22,3 @@ Mobile-Friendly Design: EnthusiastList is designed to be mobile-friendly, enabli
 Secure Transactions: The platform prioritizes secure transactions, providing a safe environment for buyers and sellers to conduct business transactions.
 
 Overall, EnthusiastList is a go-to destination for individuals passionate about cars, offering a seamless and efficient platform for buying and selling vehicles while fostering a sense of community among automotive enthusiasts.
-
-![alt text](https://i.imgur.com/g53v1Q3.png)

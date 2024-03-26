@@ -451,7 +451,7 @@ export default function Dashboard() {
                 <p className='flex-1'>Upgrading your account allows you to manage up to <b>5</b> listings, and gives you access to auto <b> listing generation.</b></p>
                 <div className='flex items-center gap-4'>
                     <button onClick={() => { setShowModal(null) }} className=' w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue    -100 px-8 duration-200 hover:opacity-60'>Go back</button>
-                    <Button text={'Upgrade Account ⭐️'} clickHandler={() => { router.push('/admin/billing') }} />
+                    <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
                 </div>
             </div>
         ),

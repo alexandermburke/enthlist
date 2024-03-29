@@ -587,11 +587,11 @@ export default function Dashboard() {
                 </ActionCard>
               
                 <div className='grid grid-cols-2 sm:w-fit gap-4'>
-                    <button onClick={handleSaveResume} className='flex items-center justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                    <button onClick={handleSaveResume} className='flex items-center justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>{savingResume ? 'Saving ...' : 'Save Listing'}</p>
                         <i className="fa-solid fa-floppy-disk"></i>
                     </button>
-                    <Link href={'/resume?user=' + currentUser.displayName} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-blue-100 bg-white p-4 rounded-full text-blue-400 duration-200 hover:opacity-50 '}>
+                    <Link href={'/resume?user=' + currentUser.displayName} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-blue-100 bg-white p-4 rounded-full text-indigo-400 duration-200 hover:opacity-50 '}>
                         <p className=''>PDF Viewer</p>
                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
                     </Link>

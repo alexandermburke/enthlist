@@ -411,23 +411,13 @@ export default function Application() {
 
                 </ActionCard>
                 <ActionCard title={'Description'} >
-                    <InputWrapper minHeight={'200px'} value={carDescription}>
+                        <InputWrapper minHeight={'200px'} value={carDescription}>
                         <textarea value={carDescription} placeholder='Paste the listing description here ...' onChange={(e) => {
                             setJobPosting(e.target.value)
                         }} className='unstyled h-full resize-none absolute inset-0 '></textarea>
                     </InputWrapper>
-
                 </ActionCard>
 
-                <ActionCard title={'Images'} >
-                    <InputWrapper minHeight={'200px'} value={imagePosting}>
-                        <textarea value={carDescription} placeholder='Place images here ... ' onChange={(e) => {
-                            setImagePosting(e.target.value)
-                        }} className='unstyled h-full resize-none absolute inset-0 '></textarea>
-                    </InputWrapper>
-
-                </ActionCard>
-            
             
                 {application && (
                     <div className='grid grid-cols-2 gap-4 sm:w-fit'>

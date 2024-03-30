@@ -2,7 +2,7 @@
 import BoringLayout from '@/components/BoringLayout'
 import CoolLayout from '@/components/CoolLayout'
 import Main from '@/components/Main'
-import ResumeViewer from '@/components/ResumeViewer'
+import ResumeViewer from '@/components/ListingViewer'
 import React, { useEffect, useState } from 'react'
 import { Poppins } from 'next/font/google';
 

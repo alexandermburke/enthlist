@@ -84,7 +84,7 @@ export default function Dashboard() {
     const router = useRouter()
 
     const { currentUser, loading, userDataObj, setUserDataObj, isPaid } = useAuth()
-    let numberOfLetters = Object.keys(userDataObj?.listings || {}).length
+    let numberOfListings = Object.keys(userDataObj?.listings || {}).length
 
     const placeHolders = {
         name: 'John Doe', email: 'johndoe@gmail.com', website: 'www.johndoe.com', location: 'City, Country'
@@ -399,8 +399,8 @@ export default function Dashboard() {
         }
     }
 
-    function handleCreateCoverLetter() {
-        if (numberOfLetters >= 20) {
+    function handleCreateListing() {
+        if (numberOfListings >= 20) {
             // shouldn't be displaying button
             return
         }
@@ -409,7 +409,7 @@ export default function Dashboard() {
             return
         }
 
-        if (numberOfLetters >= 3) {
+        if (numberOfListings >= 3) {
             // prompt to upgrade account
             setShowModal('listings')
             return
@@ -536,10 +536,10 @@ export default function Dashboard() {
                     </ul>)}
                 </ActionCard>
              
-                <ActionCard title={'Listings'} actions={numberOfLetters >= 20 ? null : (
+                <ActionCard title={'Listings'} actions={numberOfListings >= 20 ? null : (
                     <div className='flex items-center gap-4'>
-                        {numberOfLetters < 20 && (
-                            <button onClick={handleCreateCoverLetter} className='flex items-center justify-center gap-4 border border-solid border-blue-100  px-4 py-2 rounded-full text-xs sm:text-sm text-blue-400 duration-200 hover:opacity-50'>
+                        {numberOfListings < 20 && (
+                            <button onClick={handleCreateListing} className='flex items-center justify-center gap-4 border border-solid border-blue-100  px-4 py-2 rounded-full text-xs sm:text-sm text-blue-400 duration-200 hover:opacity-50'>
                                 <p className=''>Create new</p>
                             </button>
                         )}

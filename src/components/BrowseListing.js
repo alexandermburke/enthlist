@@ -5,27 +5,37 @@ import React from 'react';
 import ActionCard from './ActionCard';
 import LogoFiller from './LogoFiller';
 
-export default function BrowseListing() {
+export default function BrowseListings() {
     const { currentUser, loading, userDataObj, setUserDataObj, isPaid } = useAuth();
-    let numberOfLetters = Object.keys(userDataObj?.listings || {}).length;
+    let numberOfListings = Object.keys(userDataObj?.listings || {}).length;
 
     return (
         <div className='flex flex-col gap-8 flex-1'>
             <ActionCard
                 title={'Listings'}
                 actions={
-                    numberOfLetters >= 20 ? null : (
-                        <div className='flex flex-col gap-2 overflow-x-scroll'>
-                            <div className='grid grid-cols-4 shrink-0'>
-                                {['VIN', 'company', 'model', 'live', '', '', ''].map((label, labelIndex) => {
-                                    return (
-                                        <div key={labelIndex} className='p-1 capitalize px-2 text-xs sm:text-sm font-medium'>
-                                            <p className='truncate'>{label}</p>
+                    numberOfListings >= 20 ? null : (
+                        <div className='grid grid-cols-4 gap-4'>
+                            {(Object.keys(userDataObj?.listings || {}) || []).map((coverLetterName, coverLetterIndex) => {
+                                const coverLetter = userDataObj?.listings?.[coverLetterName] || {};
+                                const { applicationMeta, carDescription, application } = coverLetter;
+                                return (
+                                    <div key={coverLetterIndex} className='rounded-lg border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
+                                        <div className='p-2'>
+                                            <p className='truncate'>{applicationMeta?.id}</p>
                                         </div>
-                                    );
-                                })}
-                            </div>
-                            <LogoFiller />
+                                        <div className='p-2'>
+                                            <p className='truncate'>{applicationMeta?.company}</p>
+                                        </div>
+                                        <div className='p-2'>
+                                            <p className='truncate'>{applicationMeta?.model}</p>
+                                        </div>
+                                        <div className='p-2'>
+                                            <p className={'truncate ' + (application ? 'text-green-400' : 'text-pink-300')}>{application ? 'True' : 'False'}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )
                 }

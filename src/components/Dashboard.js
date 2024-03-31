@@ -62,7 +62,7 @@ const sectionTemplates = {
             notes: [''],
             tools: ['']
         }
-    ]
+    ]   
 }
 
 export default function Dashboard() {

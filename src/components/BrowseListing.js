@@ -508,7 +508,7 @@ export default function BrowseListings() {
             )}
             <div className='flex flex-col gap-8 flex-1'>
                 <ActionCard title={'Listings'}>
-                    <div className='flex flex-col gap- overflow-x-scroll'>
+                    <div className='flex flex-col gap-8 overflow-x-scroll'>
                         <div className='grid grid-cols-4 shrink-0'>
                             {['', '', '', '', '', '', ''].map((label, labelIndex) => {
                                 return (

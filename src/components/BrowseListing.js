@@ -86,10 +86,7 @@ export default function BrowseListings() {
     const { currentUser, loading, userDataObj, setUserDataObj, isPaid } = useAuth()
     let numberOfListings = Object.keys(userDataObj?.listings || {}).length
 
-    const placeHolders = {
-        name: 'John Doe', email: 'johndoe@gmail.com', website: 'www.johndoe.com', location: 'City, Country'
-    }
-
+ 
     function updateUserData(type, val) {
         setUserData({ ...userData, [type]: val })
         setChangedData(true)
@@ -442,39 +439,7 @@ export default function BrowseListings() {
         }
     }
 
-    const modalContent = {
-        listings: (
-            <div className='flex flex-1 flex-col gap-4'>
-                <p className='font-medium text-lg sm:text-xl md:text-2xl'>listing limit reached!</p>
-                <p>Free accounts can manage up to 3 active listings.</p>
-                <p className=''><i>Please either delete some listings, or upgrade your account to continue.</i></p>
-                <p className='flex-1'>Upgrading your account allows you to manage up to <b>5</b> listings, and gives you access to auto <b> listing reposting.</b></p>
-                <div className='flex items-center gap-4'>
-                    <button onClick={() => { setShowModal(null) }} className=' w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue    -100 px-8 duration-200 hover:opacity-60'>Go back</button>
-                    <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
-                </div>
-            </div>
-        ),
-        publishing: (
-            <div></div>
-        ),
-        deleteCoverletter: (
-            <div>
-                <div className='flex flex-1 flex-col gap-4'>
-                    <p className='font-medium text-lg sm:text-xl md:text-2xl'>Are you sure you want to delete this listing?</p>
-                    <p className=''><i>Deleting a listing is permanent!</i></p>
-                    <p className='flex-1 capitalize'><b>VIN</b> {coverletterToDelete.replaceAll('_', ' ')}</p>
-                    <div className='flex items-center gap-4'>
-                        <button onClick={() => { setShowModal(null) }} className=' p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 text-blue-400  px-8 duration-200 hover:opacity-60'>Go back</button>
-                        <button onClick={handleDeleteCoverLetter} className=' flex-1 p-4 text-pink-400 rounded-full mx-auto bg-white border border-solid border-pink-400 px-8 duration-200 hover:opacity-60'>Confirm Delete</button>
-                        <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
-                        {/* <Button text={'Upgrade Account ⭐️'} clickHandler={() => { router.push('/admin/billing') }} /> */}
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
+ 
     const sections = {
         bio: <Bio val={resumeSections.bio} setVal={handleUpdateBio} handleDeleteSection={handleDeleteSection} />,
         education: <Education deleteEducationListItem={deleteEducationListItem} resumeSections={resumeSections} handleUpdateWork={handleUpdateEducation} handlAddWorkListItem={handlAddEducationListItem} />,
@@ -508,7 +473,7 @@ export default function BrowseListings() {
             )}
             <div className='flex flex-col gap-8 flex-1'>
                 <ActionCard title={'Listings'}>
-                    <div className='flex flex-col gap-8 overflow-x-scroll'>
+                    <div className='flex flex-col gap-6 overflow-x-scroll'>
                         <div className='grid grid-cols-4 shrink-0'>
                             {['', '', '', '', '', '', ''].map((label, labelIndex) => {
                                 return (
@@ -518,18 +483,18 @@ export default function BrowseListings() {
                                 )
                             })}
                         </div>
-                        {(Object.keys(userDataObj?.listings || {}) || []).map((coverLetterName, coverLetterIndex) => {
-                            const coverLetter = userDataObj?.listings?.[coverLetterName] || {}
+                        {(Object.keys(userDataObj?.listings || {}) || []).map((ListingName, coverLetterIndex) => {
+                            const coverLetter = userDataObj?.listings?.[ListingName] || {}
                             const { applicationMeta, carDescription, application } = coverLetter
                             return (
                                 <div className='grid grid-cols-4 gap-4 ' key={coverLetterIndex}>
                                     <button onClick={() => {
-                                        setCoverletterToDelete(coverLetterName)
-                                        setShowModal('deleteCoverletter')
+                                    
+                                        setShowModal('deleteListing')
                                     }} className='grid items-center justify-center gap-4 rounded-full text-xs sm:text-sm text-pink-400 duration-200  absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 hover:text-pink-200'>
                                         <i className="fa-regular fa-trash-can"></i>
                                     </button>
-                                    <Link href={'/browse?id=' + (applicationMeta?.id || coverLetterName)} className='rounded-lg border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
+                                    <Link href={'/browse?id=' + (applicationMeta?.id || ListingName)} className='rounded-lg border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
                                         <div className='p-2'>
                                             <p className='truncate'>{applicationMeta?.id}</p>
                                         </div>

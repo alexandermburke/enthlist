@@ -91,7 +91,7 @@ export default function Application() {
             currData = {}
         }
 
-        let newCoverLetter = {
+        let newListing = {
             [applicationMeta.id]: {
                 applicationMeta,
                 carDescription,
@@ -102,17 +102,18 @@ export default function Application() {
 
         try {
 
-            let newCoverLettersObj = {
+            let newListingsObj = {
                 ...(currData.listings || {}),
-                ...newCoverLetter
+                ...newListing
             }
-            let newData = { ...currData, listings: newCoverLettersObj }
+            let newData = { ...currData, listings: newListingsObj }
             localStorage.setItem('hyr', JSON.stringify(newData))
-            setUserDataObj(curr => ({ ...curr, listings: newCoverLettersObj }))
+            setUserDataObj(curr => ({ ...curr, listings: newListingsObj }))
             const userRef = doc(db, 'users', currentUser.uid);
+            const listRef = doc(db, 'listings', currentUser.uid);
             const res = await setDoc(userRef, {
                 listings: {
-                    ...newCoverLetter
+                    ...newListing
                 }
             }, { merge: true });
             console.log(res)
@@ -236,15 +237,14 @@ export default function Application() {
 
             // fill out section
         } catch (err) {
-            console.log('Failed to generate letter', err.message)
+            console.log('Failed to generate listing', err.message)
         } finally {
             setIsResponding(false)
         }
     }
 
     const isReady = carDescription && applicationMeta.company && applicationMeta.role
-    const isReady2 = imagePosting && applicationMeta.company && applicationMeta.role
-
+   
     useEffect(() => {
         if (!userDataObj || !searchParams) { return }
         const applicationName = searchParams.get('id')

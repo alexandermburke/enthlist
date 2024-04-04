@@ -26,7 +26,7 @@ const plans = [
     {
         name: 'Pro',
         description: 'For Dealerships & sellers',
-        price: '$80 USD',
+        price: '$50 USD',
         interval: 'Per month',
         disclaimer: 'Subject to change based on demand',
         features: [

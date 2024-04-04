@@ -28,7 +28,7 @@ export default function SubLayout({ children }) {
     return (
         <CoolLayout>
             <Main>
-            <SearchBtn CenterAligned />
+            <SearchBtn centerAligned  />
                 {content}
             </Main>
         </CoolLayout>

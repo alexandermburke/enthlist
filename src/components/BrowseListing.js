@@ -27,7 +27,8 @@ export default function BrowseListings() {
         interior: '',
         seats: '',
         transmission: '',
-        price: ''
+        price: '',
+        image: ''
     }
     const placeHolders = {
         company: 'BMW', model: 'M3', year: '2018', status: 'clean', miles: '10,000', exterior: 'alpine white', interior: 'black', seats: 'competition', transmission: 'DCT', price: '$50,000'
@@ -44,7 +45,7 @@ export default function BrowseListings() {
    
     }
 
-
+    const images = ['image1.jpg', 'image2.jpg', 'image3.jpg']; 
     const [includeListing, setIncludeListing] = useState(true)
     const [showStatuses, setShowStatuses] = useState(false)
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData)
@@ -65,15 +66,15 @@ export default function BrowseListings() {
             <div className='flex flex-col gap-4 flex-1'>
                 <div className='flex gap-4'>
                     
-                    <FilterCard title={'Filters'}>
-                    <div className='flex flex-col gap-3 overflow-x-scroll'>
-                            <div className='grid grid-cols-1 shrink-0'>
+                    <FilterCard title={'Filters'}> 
+                    <div className='flex flex-col gap-4 overflow-x-scroll'>
+                            <div className='grid grid-cols-1 shrink-0 '>
                                 {/* Add labels for listing columns */}
                             </div>
-                         {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id').map((entry, entryIndex) => {
+                         {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'image').map((entry, entryIndex) => {
                             return (
                                 
-                                <div className='flex items-center gap-4' key={entryIndex}>
+                                <div className='flex items-center gap-5' key={entryIndex}>
                                     <p className=' capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
                                     {entry === '' ? (
                                       <div className='flex flex-col gap-1 w-full relative'>
@@ -102,27 +103,32 @@ export default function BrowseListings() {
                     <ActionCard title={'Listings'}>
                         
                         <div className='flex flex-col gap-4 overflow-x-scroll'>
-                            <div className='grid grid-cols-4 shrink-0'>
+                            <div className='grid grid-cols-1 shrink-0'>
                                 {/* Add labels for listing columns */}
                             </div>
                             {(Object.keys(userDataObj?.listings || {}) || []).map((ListingName, ListingIndex) => {
                                 const Listing = userDataObj?.listings?.[ListingName] || {}
                                 const { applicationMeta, carDescription, application } = Listing
                                 return (
-                                    <div className='grid grid-cols-4 gap-4 ' key={ListingIndex}>
+                                    <div className='grid grid-cols-1 gap-4 ' key={ListingIndex}>
                                     
                                         {/* Listing details */}
-                                        <Link href={'/browse?id=' + (applicationMeta?.id || ListingName)} className='rounded-lg border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
-                                            <div className='p-2'>
-                                                <p className='truncate'>{applicationMeta?.id}</p>
+                                        <Link href={'/browse?id=' + (applicationMeta?.id || ListingName)} className='rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
+                                            
+                                        <img src={applicationMeta?.image} alt="Image" className="action-card-image items-center" style={{ 
+                                        maxHeight: '800px', 
+                                        maxWidth: '850px', 
+                                        width: '100%',
+                                        height: 'auto', 
+                                       }} 
+                                       />
+                                        <div className='flex flex-col gap-0 p-1 m-1'> {/* Wrap the truncate divs in a flex container */}
+                                        <p className='truncate'>{applicationMeta?.id}</p>
+                                        <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.company} ${applicationMeta.model}` : ''}</p>
+                                        <div className='text-xl px-3 sm:text-2xl blueGradient font-medium sm:px-4 m-3'>
+                                            <p className='truncate'>{applicationMeta?.price}</p>
+                                             </div>
                                             </div>
-                                            <div className='p-2'>
-                                                <p className='truncate'>{applicationMeta?.company}</p>
-                                            </div>
-                                            <div className='p-2'>
-                                                <p className='truncate'>{applicationMeta?.model}</p>
-                                            </div>
-                                       
                                         </Link>
                                     </div>
                                 )

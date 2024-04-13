@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import { useDropzone } from 'react-dropzone';
 import ActionCard from './ActionCard'
 import Link from 'next/link'
 import InputWrapper from './InputWrapper'
@@ -31,11 +32,12 @@ export default function Application() {
         interior: '',
         seats: '',
         transmission: '',
-        price: ''
+        price: '',
+        image: ''
     }
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData)
     const [application, setApplication] = useState('')
-    const [carDescription, setJobPosting] = useState('')
+    const [carDescription, setCarPosting] = useState('')
     const [imagePosting, setImagePosting] = useState('')
     const [changedData, setChangedData] = useState(false)
     const [savingData, setSavingData] = useState(false)
@@ -53,12 +55,30 @@ export default function Application() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
+    const onDrop = async (acceptedFiles) => {
+    const imageFile = acceptedFiles[0];
+    const reader = new FileReader();
+   
+    reader.onload = async () => {
+        const imageDataUrl = reader.result;
+        
+        await db.collection('imageposting').add({
+            imageUrl: imageDataUrl,
+        });
+
+        setImagePosting(imageDataUrl);
+    };
+    reader.readAsDataURL(imageFile);
+};
+
+const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
 
     const placeHolders = {
-        company: 'BMW', model: 'M3', year: '2018', status: 'clean', miles: '10,000', exterior: 'alpine white', interior: 'black', seats: 'competition', transmission: 'DCT', price: '$50,000'
+        company: 'BMW', model: 'M3', year: '2018', status: 'clean', miles: '10,000', exterior: 'alpine white', interior: 'black', seats: 'competition', transmission: 'DCT', price: '$50,000', image: ''
     }
 
-    function handleSubmitName() {
+    function handleSubmitListing() {
         if (!applicationID || applicationID.length < 17) { return }
         router.push('/admin/application?id=' + applicationID);
         // updateUserData('id', applicationID)
@@ -95,7 +115,7 @@ export default function Application() {
             [applicationMeta.id]: {
                 applicationMeta,
                 carDescription,
-                imagePosting,
+                applicationMeta: { ...applicationMeta, image: imagePosting },
                 application
             }
         }
@@ -257,7 +277,7 @@ export default function Application() {
         const coverLetter = listings[applicationName]
         const { applicationMeta: localApplicationMeta, carDescription: localJobPosting, imagePosting: localImagePosting, application: localApplication } = coverLetter
         localApplicationMeta && setApplicationMeta(localApplicationMeta)
-        localJobPosting && setJobPosting(localJobPosting)
+        localJobPosting && setCarPosting(localJobPosting)
         localImagePosting && setImagePosting(localImagePosting)
         localApplication && setApplication(localApplication)
     }, [userDataObj, searchParams])
@@ -265,7 +285,7 @@ export default function Application() {
     // if it doesn't exist, then prompt the user to create a new one
 
     function sortDetails(arr) {
-        const order = ['company', 'price', 'model', 'exterior', 'year', 'interior', 'miles', 'seats', 'transmission', 'status']
+        const order = ['company', 'price', 'model', 'exterior', 'year', 'interior', 'miles', 'seats', 'transmission', 'status', 'image']
         return [...arr].sort((a, b) => {
             return order.indexOf(a) - order.indexOf(b)
         })
@@ -288,7 +308,7 @@ export default function Application() {
                         <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white border border-solid border-blue-100  px-4 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
                             <p className=''>&larr; Back</p>
                         </Link>
-                        <button onClick={handleSubmitName} className='flex items-center justify-center gap-2 border border-solid border-white bg-blue-50 px-3 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                        <button onClick={handleSubmitListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-blue-50 px-3 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
                             <p className=''>Create</p>
                             <i className="fa-regular fa-circle-check"></i>
                         </button>
@@ -351,8 +371,8 @@ export default function Application() {
                 </div>
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id} >
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 '>
-                        {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id').map((entry, entryIndex) => {
-                            return (
+                    {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'image').map((entry, entryIndex) => {
+                              return (
                                 
                                 <div className='flex items-center gap-4' key={entryIndex}>
                                     <p className=' capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
@@ -411,12 +431,26 @@ export default function Application() {
 
                 </ActionCard>
                 <ActionCard title={'Description'} >
-                        <InputWrapper minHeight={'200px'} value={carDescription}>
+                        <InputWrapper value={carDescription}>
                         <textarea value={carDescription} placeholder='Paste the listing description here ...' onChange={(e) => {
-                            setJobPosting(e.target.value)
-                        }} className='unstyled h-full resize-none absolute inset-0 '></textarea>
+                            setCarPosting(e.target.value)
+                        }} className='unstyled h-full resize-none absolute inset-0 max-h-[600px] '></textarea>
                     </InputWrapper>
                 </ActionCard>
+
+
+                <ActionCard title={'ImageDescription'}>
+            <div {...getRootProps()} className="dropzone">
+                <input {...getInputProps()} />
+                <p>Drag 'n' drop an image here, or click to select image</p>
+            </div>
+            <textarea
+                value={imagePosting}
+                placeholder='Paste the image here ...'
+                onChange={(e) => setImagePosting(e.target.value)}
+                className='unstyled h-full resize-none absolute inset-0 max-h-[600px] '
+            ></textarea>
+        </ActionCard>
 
             
                 {application && (

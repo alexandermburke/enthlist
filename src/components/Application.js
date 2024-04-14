@@ -439,17 +439,12 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
                 </ActionCard>
 
 
-                <ActionCard title={'ImageDescription'}>
-            <div {...getRootProps()} className="dropzone">
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop an image here, or click to select image</p>
-            </div>
-            <textarea
-                value={imagePosting}
-                placeholder='Paste the image here ...'
-                onChange={(e) => setImagePosting(e.target.value)}
-                className='unstyled h-full resize-none absolute inset-0 max-h-[600px] '
-            ></textarea>
+                <ActionCard title={'Drop Images Here'}>
+                <InputWrapper value={imagePosting}>
+                        <textarea value={imagePosting} placeholder='Paste the images here ...' onChange={(e) => {
+                            setCarPosting(e.target.value)
+                        }} className='unstyled h-full resize-none absolute inset-0 max-h-[600px] '></textarea>
+                    </InputWrapper>
         </ActionCard>
 
             

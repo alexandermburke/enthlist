@@ -45,12 +45,9 @@ export default function BrowseListings() {
    
     }
 
-    const images = ['image1.jpg', 'image2.jpg', 'image3.jpg']; 
-    const [includeListing, setIncludeListing] = useState(true)
-    const [showStatuses, setShowStatuses] = useState(false)
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData)
     const [showModal, setShowModal] = useState(null);
-    const router = useRouter();
+
 
     const { currentUser, userDataObj } = useAuth();
     const numberOfListings = Object.keys(userDataObj?.listings || {}).length;
@@ -125,7 +122,7 @@ export default function BrowseListings() {
                                         <div className='flex flex-col gap-0 p-1 m-1'> {/* Wrap the truncate divs in a flex container */}
                                         <p className='truncate'>{applicationMeta?.id}</p>
                                         <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.company} ${applicationMeta.model}` : ''}</p>
-                                        <div className='text-xl px-3 sm:text-2xl blueGradient font-medium sm:px-4 m-3'>
+                                        <div className='text-xl sm:text-2xl blueGradient font-medium'>
                                             <p className='truncate'>{applicationMeta?.price}</p>
                                              </div>
                                             </div>

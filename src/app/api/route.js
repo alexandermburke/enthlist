@@ -26,7 +26,7 @@ export async function POST(request) {
     try {
         const res = await openai.chat.completions.create({
             messages: [
-                { role: "system", content: "You are an experienced professional cover letter writing assistant. In your response, please only return the cover letter based off of the users prompt and and no extra fluff. Please always address the reader with the phrase 'To Whom it may concern. Thanks!" },
+                { role: "system", content: "fluff" },
                 { role: "user", content: prompt },
             ],
             model: "gpt-3.5-turbo",
@@ -43,15 +43,3 @@ export async function POST(request) {
 }
 
 
-async function sendPrompt(prompt) {
-    const completion = await openai.chat.completions.create({
-        messages: [
-            { role: "system", content: "You are an experienced professional cover letter writing assistant. In your response, please only return the cover letter based off of the users prompt and and no extra fluff." },
-            { role: "user", content: prompt },
-        ],
-        model: "gpt-3.5-turbo",
-        stream: true
-    })
-
-    console.log(completion.choices[0])
-}

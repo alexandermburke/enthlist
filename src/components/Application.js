@@ -439,7 +439,7 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
                 </ActionCard>
 
 
-                <ActionCard title={'Drop Image Link Here'}>
+                <ActionCard title={'Drop Image Link'}>
                 <InputWrapper value={imagePosting}>
                         <textarea value={imagePosting} placeholder='Paste the images here ...' onChange={(e) => {
                             setImagePosting(e.target.value)

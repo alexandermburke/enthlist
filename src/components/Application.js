@@ -9,10 +9,9 @@ import Button from './Button'
 import LogoFiller from './LogoFiller'
 import { useAuth } from '@/context/AuthContext'
 import { db } from '@/firebase'
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc } from 'firebase/firestore';
 import { useRouter, useSearchParams } from 'next/navigation'
 import Modal from './Modal'
-
 
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
@@ -101,50 +100,44 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
         setChangedData(false)
     }
 
-    async function handleSaveApplication() { // show modal and get the user to name the application
-        if (savingData || isResponding) { return }
-        setSavingData(true)
-        let currData = localStorage.getItem('hyr')
-        if (currData) {
-            currData = JSON.parse(currData)
-        } else {
-            currData = {}
-        }
-
-        let newListing = {
-            [applicationMeta.id]: {
-                applicationMeta,
-                carDescription,
-                applicationMeta: { ...applicationMeta, image: imagePosting },
-                application
-            }
-        }
-
+    async function handleSaveListing() {
+        if (savingData || isResponding) { return; }
+        setSavingData(true);
+    
         try {
-
-            let newListingsObj = {
-                ...(currData.listings || {}),
-                ...newListing
-            }
-            let newData = { ...currData, listings: newListingsObj }
-            localStorage.setItem('hyr', JSON.stringify(newData))
-            setUserDataObj(curr => ({ ...curr, listings: newListingsObj }))
+            const currData = localStorage.getItem('hyr') ? JSON.parse(localStorage.getItem('hyr')) : {};
+            const newListing = {
+                [applicationMeta.id]: {
+                    applicationMeta: { ...applicationMeta, image: imagePosting },
+                    carDescription,
+                    application
+                }
+            };
+    
+            // Update user's collection
             const userRef = doc(db, 'users', currentUser.uid);
-            const listRef = doc(db, 'listings', currentUser.uid);
-            const res = await setDoc(userRef, {
+            await updateDoc(userRef, {
                 listings: {
+                    ...(currData.listings || {}),
                     ...newListing
                 }
-            }, { merge: true });
-            console.log(res)
+            });
+    
+            // Add listing to listings collection
+            const listingsRef = doc(db, 'listings', applicationMeta.id);
+            await setDoc(listingsRef, newListing);
+    
+            // Update local storage and state
+            const newData = { ...currData, listings: { ...(currData.listings || {}), ...newListing } };
+            localStorage.setItem('hyr', JSON.stringify(newData));
+            setUserDataObj(curr => ({ ...curr, listings: newData.listings }));
         } catch (err) {
-            console.log('Failed to save data\n', err.message)
+            console.error('Failed to save data:', err);
         } finally {
-            setSavingData(false)
+            setSavingData(false);
         }
-
     }
-
+    
     async function generateCoverLetter(type, isConfirmed) {
         if (!isReady) { return }
 
@@ -303,12 +296,12 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
                         <p className='opacity-40 text-xs sm:text-sm italic'>• This VIN cannot be repurposed.</p>
                         <p className='opacity-40 text-xs sm:text-sm italic'>• VIN must be 17 characters.</p>
                     </div>
-                    <input value={applicationID} onChange={(e) => { setApplicationID(e.target.value) }} className=' bg-white border rounded-lg border-solid border-blue-100 w-full outline-none p-2 ' placeholder='Enter the VIN here' />
+                    <input value={applicationID} onChange={(e) => { setApplicationID(e.target.value) }} className=' bg-white border rounded-lg border-solid border-indigo-100 w-full outline-none p-2 ' placeholder='Enter the VIN here' />
                     <div className='flex items-stretch justify-between gap-4 '>
-                        <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white border border-solid border-blue-100  px-4 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                        <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white border border-solid border-indigo-100  px-4 py-2 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>&larr; Back</p>
                         </Link>
-                        <button onClick={handleSubmitListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-blue-50 px-3 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                        <button onClick={handleSubmitListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-indigo-50 px-3 py-2 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>Create</p>
                             <i className="fa-regular fa-circle-check"></i>
                         </button>
@@ -361,10 +354,10 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
             )}        <div className='flex flex-col gap-8 flex-1'>
                 <div className='flex items-center justify-between gap-4'>
 
-                    <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white  px-4 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                    <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white  px-4 py-2 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>&larr; Back</p>
                     </Link>
-                    <button onClick={handleSaveApplication} className='flex items-center justify-center gap-2 border border-solid border-white bg-blue-50 px-3 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                    <button onClick={handleSaveListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-indigo-50 px-3 py-2 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>{savingData ? 'Uploading' : 'Upload'}</p>
                         <i className="fa-solid fa-upload"></i>
                     </button>
@@ -450,7 +443,7 @@ const { getRootProps, getInputProps } = useDropzone({ onDrop });
             
                 {application && (
                     <div className='grid grid-cols-2 gap-4 sm:w-fit'>
-                        <button onClick={handleSaveApplication} className='flex items-center  justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                        <button onClick={handleSaveListing} className='flex items-center  justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
                             <p className=''>{savingData ? 'Saving' : 'Save'}</p>
                             <i className="fa-solid fa-floppy-disk"></i>
                         </button>

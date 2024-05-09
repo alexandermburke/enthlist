@@ -36,13 +36,13 @@ export default function Header() {
     )
     let navActions = (
         <nav className='hidden items-stretch md:flex'>
-            <Link href={'/browse'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+            <Link href={'/browse'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                 <p className=''>Browse</p>
             </Link>
-            <Link href={'/#about'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+            <Link href={'/#about'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                 <p className=''>About</p>
             </Link>
-            <Link href={'/admin'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+            <Link href={'/admin'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                 <p className=''>{currentUser ? 'Dashboard' : 'Login'}</p>
             </Link>
             <Link href={'/register'} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative'>
@@ -56,9 +56,9 @@ export default function Header() {
 
     let menuActions = (
         <nav className='flex flex-col gap-2'>
-            <Link className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200' href={'/browse'}><p>Browse</p></Link>
-            <Link className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200' href={'/#about'}><p>About</p></Link>
-            <Link className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200' href={'/admin'}><p>{currentUser ? 'Dashboard' : 'Login'}</p></Link>
+            <Link className='p-2 rounded-lg border-solid border border-indigo-50 hover:opacity-60 duration-200' href={'/browse'}><p>Browse</p></Link>
+            <Link className='p-2 rounded-lg border-solid border border-indigo-50 hover:opacity-60 duration-200' href={'/#about'}><p>About</p></Link>
+            <Link className='p-2 rounded-lg border-solid border border-indigo-50 hover:opacity-60 duration-200' href={'/admin'}><p>{currentUser ? 'Dashboard' : 'Login'}</p></Link>
             <Button clickHandler={() => { router.push('/register') }} text="Sign up free" />
         </nav>
     )
@@ -68,16 +68,16 @@ export default function Header() {
             <>
                 <p className={'capitalize flex-1 ' + poppins.className}>Welcome <span>{currentUser.displayName}</span></p>
                 <div className='hidden items-stretch md:flex'>
-                  <Link href={'/browse'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+                  <Link href={'/browse'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                         <p>Browse</p>
                     </Link>
-                    <Link href={'/admin'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+                    <Link href={'/admin'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                         <p>Dashboard</p>
                     </Link>
-                    <Link href={'/admin/account'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+                    <Link href={'/admin/account'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                         <p>Account</p>
                     </Link>
-                    <button onClick={logout} href={'/admin/account'} className='border border-solid duration-200 border-transparent hover:border-blue-100 px-4 grid place-items-center rounded-full'>
+                    <button onClick={logout} href={'/admin/account'} className='border border-solid duration-200 border-transparent hover:border-indigo-100 px-4 grid place-items-center rounded-full'>
                         <p>Logout</p>
                     </button >
                     {shareBtn}

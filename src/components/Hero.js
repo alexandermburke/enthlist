@@ -17,7 +17,7 @@ export default function Hero() {
 
                 <p className='text-base sm:text-lg md:text-xl lg:max-w-[80%] lg:mr-auto '>
                     {/* Professional resumes and cover letters built for <span className=' font-medium '>landing jobs</span>. Create and share <span className=' font-medium '>job specific</span> resumes & cover letters in seconds with your very own link. */}
-                    Enthusiast List helps <span className='font-medium'>personalized and car specific</span> listings and trades in seconds.
+                    Enthusiast List helps <span className='font-medium blueGradient '>personalized and car specific</span> listings and trades in seconds.
                 </p>
                 <SearchBtn leftAligned />
             </div>

@@ -10,8 +10,9 @@ import Skills from './Layouts/Skills';
 import Projects from './Layouts/Projects';
 import SectionWrapper from './Layouts/SectionWrapper';
 import Login from './Login';
-import { deleteField, doc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
+
 import Link from 'next/link';
 import ActionCard from './ActionCard';
 import LogoFiller from './LogoFiller';
@@ -74,7 +75,7 @@ export default function Dashboard() {
     const [resumeSections, setResumeSections] = useState([])
     const [addSection, setAddSection] = useState(false)
     const [showModal, setShowModal] = useState(null)
-    const [coverletterToDelete, setCoverletterToDelete] = useState('')
+    const [ListingToDelete, setListingToDelete] = useState('')
     const [instruction, setInstruction] = useState(null)
     const [savingUserDetails, setSavingUserDetails] = useState(false)
     const [savingResume, setSavingResume] = useState(false)
@@ -416,32 +417,37 @@ export default function Dashboard() {
         }
         router.push('/admin/application')
     }
-
-    async function handleDeleteCoverLetter() {
-        if (!coverletterToDelete || !(coverletterToDelete in userDataObj.listings)) { return }
-        let newCoverlettersObj = { ...userDataObj.listings }
-        delete newCoverlettersObj[coverletterToDelete]
+    
+    async function handleDeleteListing() {
+        if (!ListingToDelete || !(ListingToDelete in userDataObj.listings)) { return; }
+        
+        const newListingsObj = { ...userDataObj.listings };
+        delete newListingsObj[ListingToDelete];
+        
         try {
-            // write to fire base
+            // Delete listing from Firestore
+            const listingRef = doc(db, 'listings', ListingToDelete);
+            await deleteDoc(listingRef);
+    
+            // Update user document to remove the listing reference
             const userRef = doc(db, 'users', currentUser.uid);
-            const res = await setDoc(userRef, {
-                listings: {
-                    [coverletterToDelete]: deleteField()
-                }
-            }, { merge: true });
-            let newDataObj = { ...userData, listings: newCoverlettersObj }
-
-            // update local userdata and set to local storage
-            setUserDataObj(newDataObj)
-            localStorage.setItem('hyr', JSON.stringify(newDataObj))
+            await updateDoc(userRef, {
+                listings: newListingsObj
+            });
+    
+            const newDataObj = { ...userData, listings: newListingsObj };
+    
+            // Update local userdata and set to local storage
+            setUserDataObj(newDataObj);
+            localStorage.setItem('hyr', JSON.stringify(newDataObj));
         } catch (err) {
-            console.log('Failed to delete listing', err.message)
+            console.log('Failed to delete listing', err.message);
         } finally {
-            setShowModal(null)
-            setCoverletterToDelete('')
+            setShowModal(null);
+            setListingToDelete('');
         }
     }
-
+    
     const modalContent = {
         listings: (
             <div className='flex flex-1 flex-col gap-4'>
@@ -458,15 +464,15 @@ export default function Dashboard() {
         publishing: (
             <div></div>
         ),
-        deleteCoverletter: (
+        deleteListing: (
             <div>
                 <div className='flex flex-1 flex-col gap-4'>
                     <p className='font-medium text-lg sm:text-xl md:text-2xl'>Are you sure you want to delete this listing?</p>
                     <p className=''><i>Deleting a listing is permanent!</i></p>
-                    <p className='flex-1 capitalize'><b>VIN</b> {coverletterToDelete.replaceAll('_', ' ')}</p>
+                    <p className='flex-1 capitalize'><b>VIN</b> {ListingToDelete.replaceAll('_', ' ')}</p>
                     <div className='flex items-center gap-4'>
                         <button onClick={() => { setShowModal(null) }} className=' p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 text-blue-400  px-8 duration-200 hover:opacity-60'>Go back</button>
-                        <button onClick={handleDeleteCoverLetter} className=' flex-1 p-4 text-pink-400 rounded-full mx-auto bg-white border border-solid border-pink-400 px-8 duration-200 hover:opacity-60'>Confirm Delete</button>
+                        <button onClick={handleDeleteListing} className=' flex-1 p-4 text-pink-400 rounded-full mx-auto bg-white border border-solid border-pink-400 px-8 duration-200 hover:opacity-60'>Confirm Delete</button>
                         <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
                         {/* <Button text={'Upgrade Account ⭐️'} clickHandler={() => { router.push('/admin/billing') }} /> */}
                     </div>
@@ -517,8 +523,8 @@ export default function Dashboard() {
                                         return
                                     }
                                     setInstruction(`${stepIndex}`)
-                                }} className={'flex items-center  duration-200 group gap-4 p-2 pr-4 rounded-full border border-solid  ' + (stepIndex == instruction ? ' border-blue-400' : ' border-blue-100 hover:border-blue-400')} key={stepIndex}>
-                                    <div className={'px-2 aspect-square rounded-full grid duration-200 place-items-center  text-white ' + (stepIndex == instruction ? ' bg-blue-400' : ' bg-blue-200 group-hover:bg-blue-400')}>
+                                }} className={'flex items-center  duration-200 group gap-4 p-2 pr-4 rounded-full border border-solid  ' + (stepIndex == instruction ? ' border-indigo-400' : ' border-indigo-100 hover:border-indigo-400')} key={stepIndex}>
+                                    <div className={'px-2 aspect-square rounded-full grid duration-200 place-items-center  text-white ' + (stepIndex == instruction ? ' bg-indigo-400' : ' bg-indigo-200 group-hover:bg-indigo-400')}>
                                         <i className={step[1]} />
                                     </div>
                                     <p className='whitespace-nowrap'>{step[0]}</p>
@@ -526,7 +532,7 @@ export default function Dashboard() {
                             )
                         })}
                     </div>
-                    {instruction && (<ul className='flex list-disc rounded-2xl border border-solid border-blue-100 p-4 list-inside flex-col  '>
+                    {instruction && (<ul className='flex list-disc rounded-2xl border border-solid border-indigo-100 p-4 list-inside flex-col  '>
                         {completionSteps[instruction][2].split('. ').map((element, elementIndex) => {
                             return (
                                 <li key={elementIndex} className='text-slate-600'>{element.replaceAll('.', '')}.</li>
@@ -539,7 +545,7 @@ export default function Dashboard() {
                 <ActionCard title={'Listings'} actions={numberOfListings >= 20 ? null : (
                     <div className='flex items-center gap-4'>
                         {numberOfListings < 20 && (
-                            <button onClick={handleCreateListing} className='flex items-center justify-center gap-4 border border-solid border-blue-100  px-4 py-2 rounded-full text-xs sm:text-sm text-blue-400 duration-200 hover:opacity-50'>
+                            <button onClick={handleCreateListing} className='flex items-center justify-center gap-4 border border-solid border-indigo-200  px-4 py-2 rounded-full text-xs sm:text-sm text-indigo-400 duration-200 hover:opacity-50'>
                                 <p className=''>Create new</p>
                             </button>
                         )}
@@ -555,18 +561,18 @@ export default function Dashboard() {
                                 )
                             })}
                         </div>
-                        {(Object.keys(userDataObj?.listings || {}) || []).map((coverLetterName, coverLetterIndex) => {
-                            const coverLetter = userDataObj?.listings?.[coverLetterName] || {}
-                            const { applicationMeta, carDescription, application } = coverLetter
+                        {(Object.keys(userDataObj?.listings || {}) || []).map((ListingName, ListingIndex) => {
+                            const Listing = userDataObj?.listings?.[ListingName] || {}
+                            const { applicationMeta, carDescription, application } = Listing
                             return (
-                                <div className='flex flex-col relative group ' key={coverLetterIndex}>
+                                <div className='flex flex-col relative group ' key={ListingIndex}>
                                     <button onClick={() => {
-                                        setCoverletterToDelete(coverLetterName)
-                                        setShowModal('deleteCoverletter')
+                                        setListingToDelete(ListingName)
+                                        setShowModal('deleteListing')
                                     }} className='flex items-center justify-center gap-4 rounded-full text-xs sm:text-sm text-pink-400 duration-200  absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 hover:text-pink-200'>
                                         <i className="fa-regular fa-trash-can"></i>
                                     </button>
-                                    <Link href={'/admin/application?id=' + (applicationMeta?.id || coverLetterName)} className='grid shrink-0 capitalize grid-cols-4 border border-solid border-blue-50 duration-200 hover:bg-blue-50 rounded-lg overflow-hidden '>
+                                    <Link href={'/admin/application?id=' + (applicationMeta?.id || ListingName)} className='grid shrink-0 capitalize grid-cols-4 border border-solid border-blue-50 duration-200 hover:bg-blue-50 rounded-lg overflow-hidden '>
                                         <div className='p-2'>
                                             <p className='truncate'>{applicationMeta?.id}</p>
                                         </div>

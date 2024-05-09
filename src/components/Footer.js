@@ -22,7 +22,7 @@ export default function Footer() {
                     <div className='flex flex-col gap-4 w-fit'>
                         <h3 className='font-bold'>Navigation</h3>
                         <div className='flex flex-col gap-1 text-sm'>
-                            <Link className='relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full' href={'/'}><p>Home</p></Link>
+                            <Link className='relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full' href={'/browse'}><p>Browse</p></Link>
                             <Link className='relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full' href={'/admin'}><p>Login</p></Link>
                             <Link className='relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full' href={'/register'}><p>Join</p></Link>
                         </div>

@@ -141,8 +141,8 @@ export default function BrowseListings() {
                                                 />
                                                 <div className='flex flex-col gap-0 p-1 m-1'>
                                                     {/* Wrap the truncate divs in a flex container */}
-                                                    <p className='truncate'>{applicationMeta?.id}</p>
                                                     <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.company} ${applicationMeta.model}` : ''}</p>
+                                                    <p className='truncate'>{applicationMeta?.id}</p>
                                                     <div className='text-xl sm:text-2xl blueGradient font-medium'>
                                                         <p className='truncate'>{applicationMeta?.price}</p>
                                                     </div>

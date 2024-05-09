@@ -87,9 +87,6 @@ export default function Dashboard() {
     const { currentUser, loading, userDataObj, setUserDataObj, isPaid } = useAuth()
     let numberOfListings = Object.keys(userDataObj?.listings || {}).length
 
-    const placeHolders = {
-        name: 'John Doe', email: 'johndoe@gmail.com', website: 'www.johndoe.com', location: 'City, Country'
-    }
 
     function updateUserData(type, val) {
         setUserData({ ...userData, [type]: val })

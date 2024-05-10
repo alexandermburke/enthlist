@@ -117,9 +117,9 @@ export default function BrowseListings() {
 
                     {/* Listings action card */}
                     <ActionCard title={'Listings'}>
-                        <div className='flex flex-col gap-4 overflow-y-scroll'>
-                            <div className='grid grid-cols-1 shrink-0'>
-                                {/* Add labels for listing columns */}
+                        <div className='flex flex-col gap-4 '>
+                            <div className='grid grid-cols-1 shrink-0 '>
+                                {/* div for spacing */}
                             </div>
                             {listings.map((listing, index) => {
                                 const { applicationMeta } = listing; // Destructure directly from listing
@@ -127,22 +127,22 @@ export default function BrowseListings() {
                                     <div className='grid grid-cols-1 gap-4' key={index}>
                                         {/* Listing details */}
                                         <Link href={'/browse?id=' + (applicationMeta?.id || listing.id)}>
-                                            <div className='rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden'>
+                                            <div className='rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 '>
                                                 <img
                                                     src={applicationMeta?.image} // Make sure this provides a valid URL
                                                     alt="Image"
                                                     className="action-card-image items-center"
-                                                    style={{
-                                                        maxHeight: '800px',
-                                                        maxWidth: '850px',
-                                                        width: '100%',
-                                                        height: 'auto',
-                                                    }}
+                                               //     style={{
+                                               //         maxHeight: '800px',
+                                                //        maxWidth: '850px',
+                                                //        width: '100%',
+                                                //        height: 'auto',
+                                                //    }}
                                                 />
                                                 <div className='flex flex-col gap-0 p-1 m-1'>
                                                     {/* Wrap the truncate divs in a flex container */}
-                                                    <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.company} ${applicationMeta.model}` : ''}</p>
-                                                    <p className='truncate'>{applicationMeta?.id}</p>
+                                                    <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.year + ' ' + applicationMeta.company} ${applicationMeta.model}` : ''}</p>
+                                                    <p className='truncate'>{applicationMeta?.id + ' • ' + applicationMeta?.miles + ' Miles'}</p>
                                                     <div className='text-xl sm:text-2xl blueGradient font-medium'>
                                                         <p className='truncate'>{applicationMeta?.price}</p>
                                                     </div>

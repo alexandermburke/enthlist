@@ -1,7 +1,6 @@
 import { Poppins } from 'next/font/google';
 import Link from 'next/link'
 import React from 'react'
-
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
 
 export default function Footer() {
@@ -35,6 +34,7 @@ export default function Footer() {
                                 <i className="fa-solid fa-envelope"></i>
                                 <p className=''>Contact form</p>
                             </Link>
+                    
                             <div className='flex items-center gap-2 relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full'>
                                 <i className="fa-solid fa-at"></i>
                                 <p >support@enthusiastlist.app</p>

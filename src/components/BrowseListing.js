@@ -126,7 +126,7 @@ export default function BrowseListings() {
                                 return (
                                     <div className='grid grid-cols-1 gap-4' key={index}>
                                         {/* Listing details */}
-                                        <Link href={'/browse?id=' + (applicationMeta?.id || listing.id)}>
+                                        <Link href={'/browse/listing?id=' + (applicationMeta?.id || listing.id)}>
                                             <div className='rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 '>
                                                 <img
                                                     src={applicationMeta?.image} // Make sure this provides a valid URL

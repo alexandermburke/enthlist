@@ -404,6 +404,7 @@ export default function Dashboard() {
         }
         if (isPaid) {
             router.push('/admin/application')
+           
             return
         }
 
@@ -413,6 +414,7 @@ export default function Dashboard() {
             return
         }
         router.push('/admin/application')
+       
     }
     
     async function handleDeleteListing() {
@@ -478,14 +480,6 @@ export default function Dashboard() {
         )
     }
 
-    const sections = {
-        bio: <Bio val={resumeSections.bio} setVal={handleUpdateBio} handleDeleteSection={handleDeleteSection} />,
-        education: <Education deleteEducationListItem={deleteEducationListItem} resumeSections={resumeSections} handleUpdateWork={handleUpdateEducation} handlAddWorkListItem={handlAddEducationListItem} />,
-        work_experience: <WorkExperience deleteWorkListItem={deleteWorkListItem} handleDeleteWorkSection={handleDeleteWorkSection} resumeSections={resumeSections} handleUpdateWork={handleUpdateWork} handleAddWork={handleAddWork} handlAddWorkListItem={handlAddWorkListItem} />,
-        skills: <Skills deleteSkillsRow={deleteSkillsRow} handleAddWork={handleAddSkillset} resumeSections={resumeSections} handleUpdateSkills={handleUpdateSkills} handleUpdateGenre={handleUpdateGenre} />,
-        projects: <Projects handleDeleteProjectSection={handleDeleteProjectSection}
-            deleteProjectListItem={deleteProjectListItem} resumeSections={resumeSections} handleUpdateWork={handleUpdateProject} handleAddWork={handleAddProject} handlAddWorkListItem={handlAddProjectListItem} />
-    }
 
     useEffect(() => {
         if (!nextFocusElement) {

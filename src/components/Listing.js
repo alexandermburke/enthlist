@@ -341,7 +341,7 @@ export default function Application() {
                     {modalContent[showModal]}
                 </Modal>
             )}
-            <div className='flex flex-col gap-8 flex-1'>
+            <div className='flex flex-col gap-8 flex-1 capitalize'>
                 <div className='flex items-center justify-between gap-4'>
                     <Link href={'/browse'} className='flex items-center mr-auto justify-center gap-4 bg-white px-4 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>&larr; Back</p>
@@ -349,7 +349,7 @@ export default function Application() {
               
                 </div>
                 <ActionCard title={applicationMeta?.year + ' ' + applicationMeta?.company + ' ' + applicationMeta?.model} subTitle={''}>
-                <div className='grid grid-cols-1 sm:grid-cols-1 gap-4'>
+                <div className='grid grid-cols-1 sm:grid-cols-1 gap-4 '>
                 <div className='rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow '>
                 <img
                                                     src={applicationMeta?.image} // Make sure this provides a valid URL
@@ -398,14 +398,19 @@ export default function Application() {
                                             className='bg-transparent capitalize w-full outline-none border-none'
                                             placeholder={placeHolders[entry]}
                                             value={applicationMeta[entry]}
-                                           />
+                                           />   
                                     )}
                                 </div>
                             );
                         })}
                     </div>
-                    <div className='flex flex flex-col sm:items-center sm:flex-row gap-4'>
-                       
+
+                    <div className='flex items-center gap-4'>
+                    <p className={'font-medium ' + ('text-lg blueGradient sm:text-xl md:text-1xl py-2 ')}>{'Contact Seller'} </p>
+                    <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'To be added soon'}</p>
+
+                    <div className='flex flex flex-col sm:items-center sm:flex-row gap-4'> 
+                    </div>
                     </div>
                 </ActionCard>
                 <ActionCard title={'Description'}>
@@ -415,13 +420,7 @@ export default function Application() {
                         }} className='unstyled h-full resize-none absolute inset-0 max-h-[600px]'></textarea>
                     </InputWrapper>
                 </ActionCard>
-                <ActionCard title={'Contact Seller'}>
-                    <InputWrapper value={sellerContact}>
-                        <textarea value={sellerContact} placeholder='No seller information ...' onChange={(e) => {
-                  //          setCarPosting(e.target.value);
-                        }} className='unstyled h-full resize-none absolute inset-0 max-h-[200px]'></textarea>
-                    </InputWrapper>
-                </ActionCard>
+              
                 {application && (
                     <div className='grid grid-cols-2 gap-4 sm:w-fit'>
                         <button onClick={handleSaveListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full text-blue-400 duration-200 hover:opacity-50'>

@@ -366,7 +366,7 @@ export default function Dashboard() {
             return
         }
 
-        if (numberOfListings >= 3) {
+        if (numberOfListings >= 10) {
             // prompt to upgrade account
             setShowModal('listings')
             return

@@ -139,7 +139,7 @@ export default function BrowseListings() {
                                                 //        height: 'auto',
                                                 //    }}
                                                 />
-                                                <div className='flex flex-col gap-0 p-1 m-1'>
+                                                <div className='flex flex-col gap-0 p-1 m-1 capitalize'>
                                                     {/* Wrap the truncate divs in a flex container */}
                                                     <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.year + ' ' + applicationMeta.company} ${applicationMeta.model}` : ''}</p>
                                                     <p className='truncate'>{applicationMeta?.id + ' • ' + applicationMeta?.miles + ' Miles'}</p>

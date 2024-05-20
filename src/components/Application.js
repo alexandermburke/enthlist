@@ -414,7 +414,7 @@ export default function Application() {
                 <ActionCard title={'Media'}>
                     <ImageWrapper value={imagePosting} isLoading={isLoading} error={error} />
                     <input type="file" accept="image/jpeg, image/png" onChange={handleFileChange} className="file-input" />
-                    <p className='opacity-80 text-xs sm:text-sm italic'>Format: *.jpg, *.png only</p>
+                    <p className='opacity-80 text-xs sm:text-sm italic'>Format: *.jpg, *.jpeg, *.png only</p>
                 </ActionCard>
                 {application && (
                     <div className='grid grid-cols-2 gap-4 sm:w-fit'>

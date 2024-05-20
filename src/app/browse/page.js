@@ -4,7 +4,7 @@ import CoolLayout from '@/components/CoolLayout'
 import Main from '@/components/Main'
 
 export const metadata = {
-    title: "enthusiastlist.app ⋅ Admin",
+    title: "enthusiastlist.app ⋅ Browse",
 };
 
 export default function BrowsePage() {

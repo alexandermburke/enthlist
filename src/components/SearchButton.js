@@ -7,12 +7,12 @@ const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300
 
 export default function RegisterBtn(props) {
     const { leftAligned, noBtn } = props
-    const [username, setUsername] = useState('')
+    const [search, setsearch] = useState('')
     const router = useRouter()
 
-    function validateUsername() {
-        if (!username) { return }
-        router.push('/register?username=' + username)
+    function validatesearch() {
+        if (!search) { return }
+        router.push('/browse?search=' + search)
     }
 
     return (
@@ -20,8 +20,8 @@ export default function RegisterBtn(props) {
             <div className='flex items-stretch py-4 pl-4'>
                 <p></p>
             </div>
-            <input value={username} onChange={(e) => setUsername(e.target.value)} className='w-full flex-1 bg-white outline-none border-none py-4 ' placeholder='Search Listings' />
-            <button onClick={validateUsername} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative'>
+            <input value={search} onChange={(e) => setsearch(e.target.value)} className='w-full flex-1 bg-white outline-none border-none py-4 ' placeholder='Search Listings' />
+            <button onClick={validatesearch} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative'>
                 <div className='absolute inset-0 blueBackground ' />
                 <div className={'h-full px-4 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
                     <p >

@@ -2,14 +2,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { Poppins, Open_Sans } from 'next/font/google';
 import React, { useEffect, useState } from 'react'
-import GraphicDisplay from './GraphicDisplay';
-import Bio from './Layouts/Bio';
-import Education from './Layouts/Education';
-import WorkExperience from './Layouts/WorkExperience';
-import Skills from './Layouts/Skills';
-import Projects from './Layouts/Projects';
-import SectionWrapper from './Layouts/SectionWrapper';
-import Login from './Login';
 import { deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
@@ -31,40 +23,6 @@ const completionSteps = [
     ['Share your link', 'fa-solid fa-share', 'With your resume complete and saved, you can choose to publish your resume and have a live version at your special link. You can share this link with anyone!']
 ]
 
-const sectionTemplates = {
-    bio: '',
-    education: {
-        instituion: '',
-        qualification: '',
-        startDate: '',
-        endDate: '',
-        location: '',
-        notes: ['']
-    },
-    work_experience: [
-        {
-            company: '',
-            role: '',
-            startDate: '',
-            endDate: '',
-            location: '',
-            notes: [''],
-            tools: ['']
-        }
-    ],
-    skills: [{ genre: '', list: '' }],
-    projects: [
-        {
-            name: '',
-            link: '',
-            startDate: '',
-            endDate: '',
-            location: '',
-            notes: [''],
-            tools: ['']
-        }
-    ]   
-}
 
 export default function Dashboard() {
 

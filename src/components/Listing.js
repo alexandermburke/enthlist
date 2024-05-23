@@ -36,8 +36,8 @@ export default function Application() {
     };
     let defaultSellerData = {
         city: '',
-        instagram: '',
         state: '',
+        instagram: '',
         contactname: '',
         sellertype: ''
     };
@@ -99,7 +99,7 @@ export default function Application() {
         company: 'BMW', model: 'M3', year: '2018', status: 'clean', miles: '10,000', exterior: 'alpine white', interior: 'black', seats: 'competition', transmission: 'DCT', price: '$50,000', image: ''
     };
     const secondaryplaceHolders = {
-        state: 'Washington', sellertype: 'Dealership', city: 'Seattle', contactname: 'Alex', instagram: 'alex.burke29'
+        state: 'Arizona', sellertype: 'Dealership', city: 'Scottsdale', contactname: 'Alex', instagram: 'enthusiastlist'
     };
 
     const labelMapping = {
@@ -126,23 +126,19 @@ export default function Application() {
         if (!applicationID || applicationID.length < 17) { return }
         router.push('/admin/application?id=' + applicationID);
     }
+    function handleContactSeller() {
+        router.push('/browse/listing/contact?id=' + applicationID);
+    }
+    function handleReportListing() {
+        router.push('/browse/listing/report?id=' + applicationID);
+    }
+
 
     function updateUserData(type, val) {
         setApplicationMeta({ ...applicationMeta, [type]: val });
         setChangedData(true);
     }
 
-    function handleCancelDetails() {
-        let currData = localStorage.getItem('hyr');
-        let localApplicationMeta;
-        if (currData) {
-            localApplicationMeta = JSON.parse(currData).localApplicationMeta || defaultApplicationData;
-        } else {
-            localApplicationMeta = defaultApplicationData;
-        }
-        setApplicationMeta(localApplicationMeta);
-        setChangedData(false);
-    }
 
     async function handleSaveListing() {
         if (savingData || isResponding) { return; }
@@ -330,23 +326,24 @@ export default function Application() {
 
        <div className='flex items-center gap-4'>
                     <p className={'font-medium ' + ('text-lg blueGradient sm:text-xl md:text-1xl py-2')}>{'Contact Seller'} </p>
-                    <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Testing'}</p>
+                    <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Version'}</p>
        </div>
                     
-                    <div className='grid grid-cols-2 sm:grid-cols-2 gap-3'>
+         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
                    {sortDetails(Object.keys(SellerMeta)).map((entry, entryIndex) => {
                             return (
                                 <div className='flex items-center gap-4' key={entryIndex}>
-                                    <p className='capitalize font-medium w-24 sm:w-32'>{labelMapping[entry]}{['company', 'role'].includes(entry) ? '' : ''}</p>
+                                    <p className='capitalize font-medium w-30 sm:w-36'>{labelMapping[entry]}{['company', 'role'].includes(entry) ? '' : ''}</p>
                                     {entry === 'status' ? (
                                         <div className='flex flex-col gap-1 w-full relative'>
                                             <label>
                                                 <p className='capitalize'>{sellerMeta.status}</p>     
                                             </label>
-                                            {showStatuses && (
+                                            {showStatuses && (   
                                                 <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full'>
                                                 </div>
                                             )}
+                
                                         </div>
                                     ) : (
                                         <input
@@ -359,8 +356,16 @@ export default function Application() {
                             );
                         })}
                     </div>
-                 
-
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <button onClick={handleContactSeller} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
+                                                   <p className=''>Message Seller</p>
+                                                   <i className="fa-regular fa-comments"></i>
+                                             </button>
+                      <button onClick={handleReportListing} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
+                                                    <p className=''>Report Listing</p>
+                                                   <i className="fa-regular fa-flag"></i>
+                                             </button>
+                    </div>
                 </ActionCard>
                 <ActionCard title={'Description'}>
                     <InputWrapper value={carDescription}>

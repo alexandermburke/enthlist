@@ -6,12 +6,12 @@ const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300
 export default function Footer() {
 
     return (
-        <footer className='flex flex-col bg-slate-900 text-white py-10'>
+        <footer className='flex flex-col bg-indigo-900 text-white py-10'>
             <div className=' flex flex-col sm:flex-row items-center justify-center flex-wrap gap-10 sm:gap-14 md:gap-20 mx-auto py-8 px-8 text-base'>
                 <div className='flex flex-col w-fit shrink-0 gap-4 whitespace-nowrap text-center'>
                     <div className='flex flex-col mx-auto w-fit'>
                         <Link href={'/'}>
-                            <h1 className={'text-xl px-3 sm:text-2xl  sm:px-4  ' + poppins.className}>enthusiastlist.app</h1>
+                            <h1 className={'text-xl px-3 sm:text-2xl  sm:px-4 ' + poppins.className}>enthusiastlist.app</h1>
                         </Link>
                     </div>
                     <p className='mx-auto text-sm'>Copyright © 2024 Burke Software LLC</p>
@@ -30,7 +30,7 @@ export default function Footer() {
                         <h3 className='font-bold'>Contact</h3>
                         <div className='flex flex-col gap-1 text-sm'>
 
-                            <Link href={'https://forms.gle/sJHfP3W8cP6F4AvaA'} target='_blank' className='flex items-center gap-2 relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full'>
+                            <Link href={'https://github.com/alexandermburke/enthlist/'} target='_blank' className='flex items-center gap-2 relative w-fit overflow-hidden after:absolute after:right-full after:bottom-0 after:h-[1px] after:bg-white after:w-full after:duration-200 hover:after:translate-x-full'>
                                 <i className="fa-solid fa-envelope"></i>
                                 <p className=''>Contact form</p>
                             </Link>

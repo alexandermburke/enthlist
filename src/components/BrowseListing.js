@@ -108,9 +108,9 @@ export default function BrowseListings() {
                                     </div>
                                 )
                             })}
-                            <button onClick={handleFilter} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative'>
+                            <button onClick={handleFilter} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
                                 <div className='absolute inset-0 blueBackground ' />
-                                <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white'>{'Filter'}</p>
+                                <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white '>{'Filter'}</p>
                             </button>
                         </div>
                     </FilterCard>

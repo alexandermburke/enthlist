@@ -34,7 +34,16 @@ export default function Application() {
         price: '',
         image: ''
     };
+    let defaultSellerData = {
+        state: '',
+        city: '',
+        year: '',
+        sellertype: '', 
+        contantname: '',
+        instagram: ''
+    };
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
+    const [SellerMeta, setSellerMeta] = useState(defaultSellerData);
     const [application, setApplication] = useState('');
     const [carDescription, setCarPosting] = useState('');
     const [imagePosting, setImagePosting] = useState('');
@@ -126,7 +135,7 @@ export default function Application() {
                 [applicationMeta.id]: {
                     applicationMeta: { ...applicationMeta, image: imagePosting },
                     carDescription,
-                    application
+                    SellerMeta
                 }
             };
     
@@ -151,57 +160,8 @@ export default function Application() {
         }
     }
     
-    async function generateCoverLetter(type, isConfirmed) {
-        if (!isReady) { return }
-
-        if (includeResume && userDataObj.resumeSections) {
-            requestString = requestString += `Can you please also incorporate information from my resume and match it to the requirements of the job posting :\n\n${JSON.stringify(userDataObj.resumeSections)}`
-        }
-
-        if (type === 'copy') {
-            copyToClipboard(requestString);
-            return;
-        }
-
-        if (isPaid) {
-            AILetter(requestString);
-            return;
-        }
-
-        if (isConfirmed) {
-            const userRef = doc(db, 'users', currentUser.uid);
-            const res = await setDoc(userRef, {
-                billing: {
-                    apiCalls: parseInt(apiCalls) + 1
-                }
-            }, { merge: true });
-            setUserDataObj(curr => ({
-                ...curr,
-                billing: {
-                    ...curr?.billing,
-                    apiCalls: parseInt(apiCalls) + 1
-                }
-            }));
-            AILetter(requestString);
-            setShowModal(null);
-            return;
-        }
-
-        if (apiCalls < 3) {
-            setShowModal('confirmed');
-            return;
-        }
-        setShowModal('blocked');
-    }
-
-    async function copyToClipboard(requestString) {
-        setCopied(true);
-        navigator.clipboard.writeText(requestString);
-        await new Promise(r => setTimeout(r, 2000));
-        setCopied(false);
-    }
-
-    async function AILetter(requestString) {
+  
+    async function AIListing(requestString) {
         if (isResponding) { return }
         setApplication('');
         setIsResponding(true);
@@ -209,7 +169,7 @@ export default function Application() {
             const options = {
                 method: 'POST',
                 header: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'listing/json'
                 },
                 body: JSON.stringify({ prompt: requestString })
             };
@@ -315,7 +275,7 @@ export default function Application() {
                     <Link className='blueGradient' href={'/admin/billing'}>Upgrade here &rarr;</Link></p>
                 <div className='flex items-center gap-4'>
                     <button onClick={() => { setShowModal(null) }} className='w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 px-8 duration-200 hover:opacity-70'>Go back</button>
-                    <Button text={'Confirm generation'} clickHandler={() => { generateCoverLetter('ai', true) }} />
+                     <Button text={'Confirm generation'} clickHandler={() => { generateCoverLetter('ai', true) }} />
                 </div>
             </div>
         ),
@@ -396,7 +356,7 @@ export default function Application() {
                             {[true, false].map((val, valIndex) => {
                                 return (
                                     <button onClick={() => { setIncludeResume(val) }} key={valIndex} className={'flex items-center gap-2 group'}>
-                                        <div className={'h-4 aspect-square rounded border border-slate-600 duration-200 border-solid ' + ((val === includeResume) ? 'bg-slate-600' : 'group-hover:bg-slate-600')} />
+                                        <div className={'h-4 aspect-square rounded border border-indigo-500 duration-200 border-solid ' + ((val === includeResume) ? 'bg-indigo-500' : 'group-hover:bg-indigo-500')} />
                                         <p className={'duration-200 whitespace-nowrap ' + ((val === includeResume) ? '' : 'text-slate-500')}>{val ? 'Yes' : "No"}</p>
                                     </button>
                                 );

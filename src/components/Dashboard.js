@@ -502,7 +502,7 @@ export default function Dashboard() {
                 )}>
                     <div className='flex flex-col gap-2 overflow-x-scroll'>
                         <div className='grid grid-cols-4 shrink-0'>
-                            {['VIN', 'company', 'model', 'live', '', '', ''].map((label, labelIndex) => {
+                            {['VIN', 'year', 'company', 'model', '', '', ''].map((label, labelIndex) => {
                                 return (
                                     <div key={labelIndex} className='p-1 capitalize px-2 text-xs sm:text-sm font-medium'>
                                         <p className='truncate'>{label}</p>
@@ -523,7 +523,10 @@ export default function Dashboard() {
                                     </button>
                                     <Link href={'/admin/application?id=' + (applicationMeta?.id || ListingName)} className='grid shrink-0 capitalize grid-cols-4 border border-solid border-blue-50 duration-200 hover:bg-blue-50 rounded-lg overflow-hidden '>
                                         <div className='p-2'>
-                                            <p className='truncate'>{applicationMeta?.id}</p>
+                                            <p className='truncate hover:text-indigo-400'>{applicationMeta?.id}</p>
+                                        </div>
+                                        <div className='p-2'>
+                                            <p className='truncate'>{applicationMeta?.year}</p>
                                         </div>
                                         <div className='p-2'>
                                             <p className='truncate'>{applicationMeta?.company}</p>
@@ -531,11 +534,11 @@ export default function Dashboard() {
                                         <div className='p-2'>
                                             <p className='truncate'>{applicationMeta?.model}</p>
                                         </div>
-                                        <div className='p-2'>
+                               {/*         <div className='p-2'>
                                             <p className={'truncate ' + (application ? 'text-green-400' : 'text-pink-300')}>{application ? 'True' : 'False'}</p>
-                                        </div>
+                                </div> */}
                                     </Link>
-                                </div>
+                                </div> 
                             )
                         })}
                     </div>

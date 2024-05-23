@@ -12,7 +12,7 @@ export default function Account() {
     const vals = {
         'email': currentUser.email,
         'username': currentUser.displayName,
-        'listings': Object.keys(userDataObj?.coverLetters || {}).length,
+        'listings': Object.keys(userDataObj?.listings || {}).length,
         'link': 'www.enthusiastlist.app/' + currentUser.displayName,
     }
 
@@ -20,7 +20,7 @@ export default function Account() {
         'current_plan': userDataObj?.billing?.plan || 'Free',
         'status': userDataObj?.billing?.status ? 'Active' : 'Inactive',
         'actions': (
-            <Link href={isPaid ? '/admin/billing/cancel_subscription' : '/admin/billing'} className='duration-200 hover:opacity-60'><p>{isPaid ? 'Cancel plan' : 'Upgrade account'} &rarr;</p></Link>
+            <Link href={isPaid ? '/admin/billing/cancel_subscription' : '/admin/billing'} className='duration-200 hover:opacity-60 text-indigo-400'><p>{isPaid ? 'Cancel plan' : 'Upgrade account'} &rarr;</p></Link>
         )
     }
 
@@ -28,7 +28,7 @@ export default function Account() {
         <>
             <div className='flex flex-col gap-8 flex-1'>
                 <div className='flex items-center justify-between gap-4'>
-                    <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white  px-4 py-2 rounded-full  text-blue-400 duration-200 hover:opacity-50'>
+                    <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white  px-4 py-2 rounded-full  text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>&larr; Back</p>
                     </Link>
                 </div>

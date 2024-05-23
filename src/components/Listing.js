@@ -34,18 +34,22 @@ export default function Application() {
         price: '',
         image: ''
     };
+    let defaultSellerData = {
+        city: '',
+        instagram: '',
+        state: '',
+        contactname: '',
+        sellertype: ''
+    };
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
+    const [SellerMeta, setSellerMeta] = useState(defaultSellerData);
     const [application, setApplication] = useState('');
     const [carDescription, setCarPosting] = useState('');
-    const [sellerContact, setContact] = useState('');
     const [imagePosting, setImagePosting] = useState('');
     const [changedData, setChangedData] = useState(false);
     const [savingData, setSavingData] = useState(false);
     const [applicationID, setApplicationID] = useState('');
-    const [includeResume, setIncludeResume] = useState(true);
-    const [isResponding, setIsResponding] = useState(false);
     const [showStatuses, setShowStatuses] = useState(false);
-    const [copied, setCopied] = useState(false);
     const [showModal, setShowModal] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -94,6 +98,29 @@ export default function Application() {
     const placeHolders = {
         company: 'BMW', model: 'M3', year: '2018', status: 'clean', miles: '10,000', exterior: 'alpine white', interior: 'black', seats: 'competition', transmission: 'DCT', price: '$50,000', image: ''
     };
+    const secondaryplaceHolders = {
+        state: 'Washington', sellertype: 'Dealership', city: 'Seattle', contactname: 'Alex', instagram: 'alex.burke29'
+    };
+
+    const labelMapping = {
+        company: 'Company',
+        model: 'Model',
+        year: 'Year',
+        status: 'Status',
+        id: 'ID',
+        miles: 'Miles',
+        exterior: 'Exterior',
+        interior: 'Interior',
+        seats: 'Seats',
+        transmission: 'Transmission',
+        price: 'Price',
+        image: 'Image',
+        city: 'City',
+        sellertype: 'Seller Type', // updated label for sellertype
+        contactname: 'Contact Name',
+        state: 'State',
+        instagram: 'Instagram'
+    };
 
     function handleSubmitListing() {
         if (!applicationID || applicationID.length < 17) { return }
@@ -127,7 +154,7 @@ export default function Application() {
                 [applicationMeta.id]: {
                     applicationMeta: { ...applicationMeta, image: imagePosting },
                     carDescription,
-                    application
+                    sellerMeta
                 }
             };
     
@@ -152,108 +179,6 @@ export default function Application() {
         }
     }
     
-    async function generateCoverLetter(type, isConfirmed) {
-        if (!isReady) { return }
-
-        if (includeResume && userDataObj.resumeSections) {
-            requestString = requestString += `Can you please also incorporate information from my resume and match it to the requirements of the job posting :\n\n${JSON.stringify(userDataObj.resumeSections)}`
-        }
-
-        if (type === 'copy') {
-            copyToClipboard(requestString);
-            return;
-        }
-
-        if (isPaid) {
-            AILetter(requestString);
-            return;
-        }
-
-        if (isConfirmed) {
-            const userRef = doc(db, 'users', currentUser.uid);
-            const res = await setDoc(userRef, {
-                billing: {
-                    apiCalls: parseInt(apiCalls) + 1
-                }
-            }, { merge: true });
-            setUserDataObj(curr => ({
-                ...curr,
-                billing: {
-                    ...curr?.billing,
-                    apiCalls: parseInt(apiCalls) + 1
-                }
-            }));
-            AILetter(requestString);
-            setShowModal(null);
-            return;
-        }
-
-        if (apiCalls < 3) {
-            setShowModal('confirmed');
-            return;
-        }
-        setShowModal('blocked');
-    }
-
-    async function copyToClipboard(requestString) {
-        setCopied(true);
-        navigator.clipboard.writeText(requestString);
-        await new Promise(r => setTimeout(r, 2000));
-        setCopied(false);
-    }
-
-    async function AILetter(requestString) {
-        if (isResponding) { return }
-        setApplication('');
-        setIsResponding(true);
-        try {
-            const options = {
-                method: 'POST',
-                header: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ prompt: requestString })
-            };
-            const res = await fetch('/api', options);
-            if (!res.ok) {
-                console.log('Response bad status');
-                return;
-            }
-            const streamToString = async (body) => {
-                try {
-                    const reader = body?.pipeThrough(new TextDecoderStream()).getReader()
-
-                    while (reader) {
-                        let stream = await reader.read()
-                        if (stream.done) { break }
-                        const chunks = stream.value
-                        if (chunks) {
-                            console.log(chunks)
-                            for (let chunk of chunks) {
-                                const content = chunk
-                                if (!content) { continue }
-                                console.log(content)
-                                setApplication(currMessage => {
-                                    return currMessage + content
-                                })
-                            }
-                        }
-                    }
-                    setIsResponding(false)
-                } catch (err) {
-                    console.log('Error', err)
-                    setApplication('No listing!')
-                    setIsResponding(false)
-                }
-            }
-
-            streamToString(res.body)
-        } catch (err) {
-            console.log('Failed to generate listing', err.message)
-        } finally {
-            setIsResponding(false)
-        }
-    }
 
     const isReady = carDescription && applicationMeta.company && applicationMeta.role;
    
@@ -281,8 +206,7 @@ export default function Application() {
         });
     }
 
-    if (!applicationMeta.id) {
-        return (
+  
             <>
                 <ActionCard title={'New listing'} lgHeader noFlex>
                     <p className=''>Provide the VIN for your car!</p>
@@ -304,8 +228,7 @@ export default function Application() {
                 </ActionCard>
                 <LogoFiller />
             </>
-        );
-    }
+   
 
     const modalContent = {
         confirmed: (
@@ -316,7 +239,7 @@ export default function Application() {
                     <Link className='blueGradient' href={'/admin/billing'}>Upgrade here &rarr;</Link></p>
                 <div className='flex items-center gap-4'>
                     <button onClick={() => { setShowModal(null) }} className='w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 px-8 duration-200 hover:opacity-70'>Go back</button>
-                    <Button text={'Confirm generation'} clickHandler={() => { generateCoverLetter('ai', true) }} />
+                 
                 </div>
             </div>
         ),
@@ -341,7 +264,7 @@ export default function Application() {
                     {modalContent[showModal]}
                 </Modal>
             )}
-            <div className='flex flex-col gap-8 flex-1 capitalize'>
+            <div className='flex flex-col gap-8 flex-1 capitalize '>
                 <div className='flex items-center justify-between gap-4'>
                     <Link href={'/browse'} className='flex items-center mr-auto justify-center gap-4 bg-white px-4 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>&larr; Back</p>
@@ -368,11 +291,11 @@ export default function Application() {
                 </ActionCard>
 
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 '>
                         {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'image').map((entry, entryIndex) => {
                             return (
                                 <div className='flex items-center gap-4' key={entryIndex}>
-                                    <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
+                                    <p className='capitalize font-medium w-24 sm:w-32'>{labelMapping[entry]}{['company', 'role'].includes(entry) ? '' : ''}</p>
                                     {entry === 'status' ? (
                                         <div className='flex flex-col gap-1 w-full relative'>
                                             <label>
@@ -405,13 +328,39 @@ export default function Application() {
                         })}
                     </div>
 
-                    <div className='flex items-center gap-4'>
-                    <p className={'font-medium ' + ('text-lg blueGradient sm:text-xl md:text-1xl py-2 ')}>{'Contact Seller'} </p>
-                    <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'To be added soon'}</p>
+       <div className='flex items-center gap-4'>
+                    <p className={'font-medium ' + ('text-lg blueGradient sm:text-xl md:text-1xl py-2')}>{'Contact Seller'} </p>
+                    <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Testing'}</p>
+       </div>
+                    
+                    <div className='grid grid-cols-2 sm:grid-cols-2 gap-3'>
+                   {sortDetails(Object.keys(SellerMeta)).map((entry, entryIndex) => {
+                            return (
+                                <div className='flex items-center gap-4' key={entryIndex}>
+                                    <p className='capitalize font-medium w-24 sm:w-32'>{labelMapping[entry]}{['company', 'role'].includes(entry) ? '' : ''}</p>
+                                    {entry === 'status' ? (
+                                        <div className='flex flex-col gap-1 w-full relative'>
+                                            <label>
+                                                <p className='capitalize'>{sellerMeta.status}</p>     
+                                            </label>
+                                            {showStatuses && (
+                                                <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full'>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <input
+                                            className='bg-transparent capitalize w-full outline-none border-none'
+                                            placeholder={secondaryplaceHolders[entry]}
+                                            value={SellerMeta[entry]}
+                                           />   
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                 
 
-                    <div className='flex flex flex-col sm:items-center sm:flex-row gap-4'> 
-                    </div>
-                    </div>
                 </ActionCard>
                 <ActionCard title={'Description'}>
                     <InputWrapper value={carDescription}>

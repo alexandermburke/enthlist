@@ -281,7 +281,7 @@ export default function Listing() {
                             {[true, false].map((val, valIndex) => {
                                 return (
                                     <button onClick={() => {}} key={valIndex} className={'flex items-center gap-2 group'}>
-                                        <div className={'h-4 aspect-square rounded border border-indigo-500 duration-200 border-solid ' + ((val === true) ? 'bg-indigo-500' : 'group-hover:bg-indigo-500')} />
+                                        <div className={'h-4 aspect-square rounded border border-gray-500 duration-200 border-solid ' + ((val === true) ? 'bg-gray-500' : 'group-hover:bg-gray-500')} />
                                         <p className={'duration-200 whitespace-nowrap ' + ((val === true) ? '' : 'text-slate-500')}>{val ? 'Yes' : "No"}</p>
                                     </button>
                                 );

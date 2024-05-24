@@ -20,6 +20,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
+    "react-responsive-carousel": "^3.2.23",
     "stripe": "^14.18.0"
   },
   "devDependencies": {

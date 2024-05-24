@@ -10,7 +10,7 @@ import Button from './Button';
 import LogoFiller from './LogoFiller';
 import { useAuth } from '@/context/AuthContext';
 import { db, storage } from '@/firebase';
-import { doc, updateDoc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, collection } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Modal from './Modal';
@@ -19,7 +19,7 @@ const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
 
-export default function Application() {
+export default function Listing() {
     let defaultApplicationData = {
         company: '',
         model: '',
@@ -32,70 +32,65 @@ export default function Application() {
         seats: '',
         transmission: '',
         price: '',
-        image: ''
+        images: [] // Array to store multiple image URLs
     };
     let defaultSellerData = {
-        state: '',
         city: '',
-        year: '',
-        sellertype: '', 
-        contantname: '',
-        instagram: ''
+        state: '',
+        instagram: '',
+        contactname: '',
+        sellertype: ''
     };
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
     const [SellerMeta, setSellerMeta] = useState(defaultSellerData);
-    const [application, setApplication] = useState('');
     const [carDescription, setCarPosting] = useState('');
-    const [imagePosting, setImagePosting] = useState('');
-    const [changedData, setChangedData] = useState(false);
-    const [savingData, setSavingData] = useState(false);
+    const [imagePostings, setImagePostings] = useState([]); // Array to store multiple image URLs
     const [applicationID, setApplicationID] = useState('');
-    const [includeResume, setIncludeResume] = useState(true);
-    const [isResponding, setIsResponding] = useState(false);
-    const [showStatuses, setShowStatuses] = useState(false);
-    const [copied, setCopied] = useState(false);
-    const [showModal, setShowModal] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [showStatuses, setShowStatuses] = useState(false);
+    const [showModal, setShowModal] = useState(null);
     const [error, setError] = useState(null);
 
-    const { userDataObj, currentUser, setUserDataObj, isPaid } = useAuth();
-    let apiCalls = userDataObj?.billing?.apiCalls || 0;
-
+    const { userDataObj, currentUser, setUserDataObj } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const onDrop = async (acceptedFiles) => {
-        const imageFile = acceptedFiles[0];
-        uploadImage(imageFile);
+        uploadImages(acceptedFiles);
     };
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: { 'image/jpeg': [], 'image/png': [] } });
+    const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: { 'image/jpeg': [], 'image/png': [] }, multiple: true });
 
-    const uploadImage = async (imageFile) => {
-        const storageRef = ref(storage, `images/${imageFile.name}`);
-        
+    const uploadImages = async (imageFiles) => {
         setIsLoading(true);
         setError(null);
         
         try {
-            await uploadBytes(storageRef, imageFile);
-            const imageUrl = await getDownloadURL(storageRef);
-            await addDoc(collection(db, 'imageposting'), {
-                imageUrl,
+            const urls = await Promise.all(imageFiles.map(async (file) => {
+                const storageRef = ref(storage, `images/${file.name}`);
+                await uploadBytes(storageRef, file);
+                const imageUrl = await getDownloadURL(storageRef);
+                return imageUrl;
+            }));
+            setImagePostings(prev => [...prev, ...urls]);
+            
+            // Save the URLs to Firestore
+            const listingsRef = doc(db, 'listings', applicationMeta.id);
+            await updateDoc(listingsRef, {
+                'applicationMeta.images': [...applicationMeta.images, ...urls]
             });
-            setImagePosting(imageUrl);
         } catch (error) {
-            console.error("Error uploading image: ", error);
-            setError("Failed to upload image");
+            console.error("Error uploading images: ", error);
+            setError("Failed to upload images");
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            uploadImage(file);
+        const files = event.target.files;
+        if (files) {
+            uploadImages(Array.from(files));
         }
     };
 
@@ -110,30 +105,16 @@ export default function Application() {
 
     function updateUserData(type, val) {
         setApplicationMeta({ ...applicationMeta, [type]: val });
-        setChangedData(true);
-    }
-
-    function handleCancelDetails() {
-        let currData = localStorage.getItem('hyr');
-        let localApplicationMeta;
-        if (currData) {
-            localApplicationMeta = JSON.parse(currData).localApplicationMeta || defaultApplicationData;
-        } else {
-            localApplicationMeta = defaultApplicationData;
-        }
-        setApplicationMeta(localApplicationMeta);
-        setChangedData(false);
     }
 
     async function handleSaveListing() {
-        if (savingData || isResponding) { return; }
-        setSavingData(true);
+        setIsLoading(true);
     
         try {
             const currData = localStorage.getItem('hyr') ? JSON.parse(localStorage.getItem('hyr')) : {};
             const newListing = {
                 [applicationMeta.id]: {
-                    applicationMeta: { ...applicationMeta, image: imagePosting },
+                    applicationMeta: { ...applicationMeta, images: imagePostings },
                     carDescription,
                     SellerMeta
                 }
@@ -156,66 +137,10 @@ export default function Application() {
         } catch (err) {
             console.error('Failed to save data:', err);
         } finally {
-            setSavingData(false);
+            setIsLoading(false);
         }
     }
     
-  
-    async function AIListing(requestString) {
-        if (isResponding) { return }
-        setApplication('');
-        setIsResponding(true);
-        try {
-            const options = {
-                method: 'POST',
-                header: {
-                    'Content-type': 'listing/json'
-                },
-                body: JSON.stringify({ prompt: requestString })
-            };
-            const res = await fetch('/api', options);
-            if (!res.ok) {
-                console.log('Response bad status');
-                return;
-            }
-            const streamToString = async (body) => {
-                try {
-                    const reader = body?.pipeThrough(new TextDecoderStream()).getReader()
-
-                    while (reader) {
-                        let stream = await reader.read()
-                        if (stream.done) { break }
-                        const chunks = stream.value
-                        if (chunks) {
-                            console.log(chunks)
-                            for (let chunk of chunks) {
-                                const content = chunk
-                                if (!content) { continue }
-                                console.log(content)
-                                setApplication(currMessage => {
-                                    return currMessage + content
-                                })
-                            }
-                        }
-                    }
-                    setIsResponding(false)
-                } catch (err) {
-                    console.log('Error', err)
-                    setApplication('No listing!')
-                    setIsResponding(false)
-                }
-            }
-
-            streamToString(res.body)
-        } catch (err) {
-            console.log('Failed to generate listing', err.message)
-        } finally {
-            setIsResponding(false)
-        }
-    }
-
-    const isReady = carDescription && applicationMeta.company && applicationMeta.role;
-   
     useEffect(() => {
         if (!userDataObj || !searchParams) { return }
         const applicationName = searchParams.get('id');
@@ -226,15 +151,15 @@ export default function Application() {
         setApplicationMeta(curr => ({ ...curr, id: applicationName }));
         if (!(applicationName in listings)) { return }
         const coverLetter = listings[applicationName];
-        const { applicationMeta: localApplicationMeta, carDescription: localJobPosting, imagePosting: localImagePosting, application: localApplication } = coverLetter;
+        const { applicationMeta: localApplicationMeta, carDescription: localJobPosting, application: localApplication } = coverLetter;
         localApplicationMeta && setApplicationMeta(localApplicationMeta);
         localJobPosting && setCarPosting(localJobPosting);
-        localImagePosting && setImagePosting(localImagePosting);
+        setImagePostings(localApplicationMeta?.images || []);
         localApplication && setApplication(localApplication);
     }, [userDataObj, searchParams]);
 
     function sortDetails(arr) {
-        const order = ['company', 'price', 'model', 'exterior', 'year', 'interior', 'miles', 'seats', 'transmission', 'status', 'image'];
+        const order = ['company', 'price', 'model', 'exterior', 'year', 'interior', 'miles', 'seats', 'transmission', 'status', 'images'];
         return [...arr].sort((a, b) => {
             return order.indexOf(a) - order.indexOf(b);
         });
@@ -270,12 +195,12 @@ export default function Application() {
         confirmed: (
             <div className='flex flex-1 flex-col gap-4'>
                 <p className='font-medium text-lg sm:text-xl md:text-2xl'>Listing generator</p>
-                <p>You have <b>{3 - apiCalls}</b> free listings remaining.</p>
+                <p>You have free listings remaining.</p>
                 <p className='flex-1'>Upgrading your account allows <b>unlimited</b> listing generations! <br />
                     <Link className='blueGradient' href={'/admin/billing'}>Upgrade here &rarr;</Link></p>
                 <div className='flex items-center gap-4'>
                     <button onClick={() => { setShowModal(null) }} className='w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 px-8 duration-200 hover:opacity-70'>Go back</button>
-                     <Button text={'Confirm generation'} clickHandler={() => { generateCoverLetter('ai', true) }} />
+                     <Button text={'Confirm generation'} clickHandler={() => {}} />
                 </div>
             </div>
         ),
@@ -306,13 +231,13 @@ export default function Application() {
                         <p className=''>&larr; Back</p>
                     </Link>
                     <button onClick={handleSaveListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-indigo-50 px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                        <p className=''>{savingData ? 'Uploading' : 'Upload'}</p>
+                        <p className=''>{isLoading ? 'Uploading' : 'Upload'}</p>
                         <i className="fa-solid fa-upload"></i>
                     </button>
                 </div>
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                        {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'image').map((entry, entryIndex) => {
+                        {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
                             return (
                                 <div className='flex items-center gap-4' key={entryIndex}>
                                     <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
@@ -355,9 +280,9 @@ export default function Application() {
                         <div className='grid grid-cols-2 gap-4'>
                             {[true, false].map((val, valIndex) => {
                                 return (
-                                    <button onClick={() => { setIncludeResume(val) }} key={valIndex} className={'flex items-center gap-2 group'}>
-                                        <div className={'h-4 aspect-square rounded border border-indigo-500 duration-200 border-solid ' + ((val === includeResume) ? 'bg-indigo-500' : 'group-hover:bg-indigo-500')} />
-                                        <p className={'duration-200 whitespace-nowrap ' + ((val === includeResume) ? '' : 'text-slate-500')}>{val ? 'Yes' : "No"}</p>
+                                    <button onClick={() => {}} key={valIndex} className={'flex items-center gap-2 group'}>
+                                        <div className={'h-4 aspect-square rounded border border-indigo-500 duration-200 border-solid ' + ((val === true) ? 'bg-indigo-500' : 'group-hover:bg-indigo-500')} />
+                                        <p className={'duration-200 whitespace-nowrap ' + ((val === true) ? '' : 'text-slate-500')}>{val ? 'Yes' : "No"}</p>
                                     </button>
                                 );
                             })}
@@ -372,17 +297,22 @@ export default function Application() {
                     </InputWrapper>
                 </ActionCard>
                 <ActionCard title={'Media'}>
-                    <ImageWrapper value={imagePosting} isLoading={isLoading} error={error} />
-                    <input type="file" accept="image/jpeg, image/png" onChange={handleFileChange} className="file-input" />
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                        {imagePostings.map((url, index) => (
+                            <ImageWrapper key={index} value={url} isLoading={isLoading} error={error} />
+                        ))}
+                    </div>
+                    <input type="file" accept="image/jpeg, image/png" multiple onChange={handleFileChange} className="file-input" />
                     <p className='opacity-80 text-xs sm:text-sm italic'>Format: *.jpg, *.jpeg, *.png only</p>
+                    <p className='opacity-80 text-xs sm:text-sm italic'>Please wait until all pictures are displayed before uploading</p>
                 </ActionCard>
-                {application && (
+                {applicationMeta.id && (
                     <div className='grid grid-cols-2 gap-4 sm:w-fit'>
                         <button onClick={handleSaveListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full text-blue-400 duration-200 hover:opacity-50'>
-                            <p className=''>{savingData ? 'Saving' : 'Save'}</p>
+                            <p className=''>{isLoading ? 'Saving' : 'Save'}</p>
                             <i className="fa-solid fa-floppy-disk"></i>
                         </button>
-                        <Link href={'/listing/' + applicationMeta.id} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-blue-100 bg-white p-4 rounded-full text-blue-400 duration-200 hover:opacity-50 ' + (!isReady ? 'opacity-50' : '')}>
+                        <Link href={'/listing/' + applicationMeta.id} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-blue-100 bg-white p-4 rounded-full text-blue-400 duration-200 hover:opacity-50 ' + (!carDescription || !applicationMeta.company ? 'opacity-50' : '')}>
                             <p className=''>PDF Viewer</p>
                             <i className="fa-solid fa-arrow-up-right-from-square"></i>
                         </Link>

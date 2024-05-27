@@ -6,6 +6,26 @@ html {
   scroll-behavior: smooth;
 }
 
+.image-container {
+  width: 600px; /* Specify the size you want */
+  height: 800px; /* Specify the size you want */
+  overflow: hidden;
+  position: relative;
+  flex: none; /* Prevents images from stretching */
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+
 .hexigon {
   /* clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); */
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);

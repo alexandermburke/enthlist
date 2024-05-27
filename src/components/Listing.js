@@ -124,12 +124,12 @@ export default function Listing() {
     }, [applicationMeta]);
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [transition, setTransition] = useState(false);
+    const [transitions, setTransitions] = useState({});
 
     useEffect(() => {
         if (imagePostings.length > 1) {
             const intervalId = setInterval(() => {
-                setTransition(true);
+                setTransitions(true);
                 setCurrentImageIndex(prevIndex => (prevIndex + 1) % imagePostings.length);
             }, 25000); // Change image every 15 seconds
 
@@ -139,43 +139,27 @@ export default function Listing() {
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            setTransition(false);
+            setTransitions(false);
         }, 500); // Duration of CSS transition
 
         return () => clearTimeout(timeoutId);
     }, [currentImageIndex]);
 
     const handlePrevClick = () => {
-        setTransition(true);
+        setTransitions(true);
         setCurrentImageIndex(prevIndex => (prevIndex - 1 + imagePostings.length) % imagePostings.length);
     };
 
     const handleNextClick = () => {
-        setTransition(true);
+        setTransitions(true);
         setCurrentImageIndex(prevIndex => (prevIndex + 1) % imagePostings.length);
     };
 
     if (!applicationMeta.id) {
         return (
             <>
-                <ActionCard title={'New listing'} lgHeader noFlex>
-                    <p className=''>Provide the VIN for your car!</p>
-                    <p className='font-medium'>VIN</p>
-                    <div className='flex flex-col gap-1'>
-                        <p className='opacity-40 text-xs sm:text-sm italic'>• This VIN cannot be repurposed.</p>
-                        <p className='opacity-40 text-xs sm:text-sm italic'>• VIN must be 17 characters.</p>
-                    </div>
-                    <input value={applicationID} onChange={(e) => { setApplicationID(e.target.value) }} className='bg-white border rounded-lg border-solid border-indigo-100 w-full outline-none p-2' placeholder='Enter the VIN here' />
-                    <div className='flex items-stretch justify-between gap-4'>
-                        <Link href={'/admin'} className='flex items-center mr-auto justify-center gap-4 bg-white border border-solid border-indigo-100 px-4 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                            <p className=''>&larr; Back</p>
-                        </Link>
-                        <button onClick={() => {}} className='flex items-center justify-center gap-2 border border-solid border-white bg-indigo-50 px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                            <p className=''>Create</p>
-                            <i className="fa-regular fa-circle-check"></i>
-                        </button>
-                    </div>
-                </ActionCard>
+                  <p className={'font-medium text-lg blueGradient sm:text-xl md:text-1xl py-2'}>{'Error'} </p>
+                   
                 <LogoFiller />
             </>
         );
@@ -189,12 +173,14 @@ export default function Listing() {
                         <p className=''>&larr; Back</p>
                     </Link>
                 </div>
+
+                {/*  images transform  */}
                 <ActionCard title={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} subTitle={''}>
-                    <div className='grid grid-cols-1 sm:grid-cols-1 gap-4 '>
-                        <div className='relative rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow '>
-                            <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transition ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
+                    <div className='grid grid-cols-1 gap-4 '>
+                        <div className='relative rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow max-h-128 max-w-128'>
+                            <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
                                 {imagePostings.map((image, index) => (
-                                    <img key={index} src={image} alt={`slide-${index}`} className="image" style={{ width: '100%', flex: 'none' }} />
+                                  <img key={index} src={image} alt={`slide-${index}`} className="image max-h-128 max-w-128" style={{ width: '100%', flex: 'none' }} />
                                 ))}
                             </div>
                             <button onClick={handlePrevClick} className='absolute left-1 top-1/2 transform -translate-y-1/2 bg-gray-600 text-white px-2 py-6 rounded-full opacity-75 hover:opacity-100'>
@@ -206,6 +192,8 @@ export default function Listing() {
                         </div>
                     </div>
                 </ActionCard>
+
+                {/*  car listing details  */}
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                         {Object.keys(applicationMeta).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => (
@@ -220,6 +208,8 @@ export default function Listing() {
                             </div>
                         ))}
                     </div>
+
+                    {/*  contact seller   */}
                     <div className='flex items-center gap-4'>
                         <p className={'font-medium text-lg blueGradient sm:text-xl md:text-1xl py-2'}>{'Contact Seller'} </p>
                         <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Version'}</p>
@@ -237,6 +227,8 @@ export default function Listing() {
                             </div>
                         ))}
                     </div>
+
+                    {/*  car listing detail buttons  */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>Message Seller</p>
@@ -247,6 +239,8 @@ export default function Listing() {
                         </button>
                     </div>
                 </ActionCard>
+
+                {/*  description  */}
                 <ActionCard title={'Description'}>
                     <InputWrapper value={carDescription}>
                         <textarea value={carDescription} placeholder='No description ...' onChange={(e) => setCarPosting(e.target.value)} className='unstyled h-full resize-none absolute inset-0 max-h-[600px]'></textarea>

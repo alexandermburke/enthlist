@@ -6,7 +6,7 @@ const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300
 export default function Footer() {
 
     return (
-        <footer className='flex flex-col bg-indigo-900 text-white py-10'>
+        <footer className='flex flex-col bg-indigo-800 text-white py-10'>
             <div className=' flex flex-col sm:flex-row items-center justify-center flex-wrap gap-10 sm:gap-14 md:gap-20 mx-auto py-8 px-8 text-base'>
                 <div className='flex flex-col w-fit shrink-0 gap-4 whitespace-nowrap text-center'>
                     <div className='flex flex-col mx-auto w-fit'>

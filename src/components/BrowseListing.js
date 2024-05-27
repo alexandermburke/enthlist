@@ -11,6 +11,8 @@ import LogoFiller from './LogoFiller';
 import Modal from './Modal';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import SelectPage from './SelectPage';
+
 
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
 const opensans = Open_Sans({
@@ -141,6 +143,7 @@ export default function BrowseListings() {
                     {/* Add modal content here */}
                 </Modal>
             )}
+             {/*  filter card  */}
             <div className='flex flex-col gap-4 flex-1'>
                 <div className='flex gap-4'>
                     <FilterCard title={'Filters'}>
@@ -165,17 +168,23 @@ export default function BrowseListings() {
                                     </div>
                                 )
                             })}
-                              <button onClick={handleFilter} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
+                                {/*  divs for spacing  */}
+                               <div className='flex gap-5'></div>
+                               <div className='flex gap-5'></div>
+
+                                   {/*  filter button  */}
+                              <button onClick={handleFilter} className='ml-1  duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
                                 <div className='absolute inset-0 blueBackground ' />
-                                <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white '>{'Filter'}</p>
+                                <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white '>{'Filter'}</p>
                             </button>
                         </div>
                     </FilterCard>
 
+                             {/*  listing selection  */}
                     <ActionCard title={'Listings'}>
                         <div className='flex flex-col gap-4 '>
                             <div className='grid grid-cols-1 shrink-0 '>
-                                {/* div for spacing */}
+                                {/*  div for spacing */}
                             </div>
                             {listings.map((listing, index) => {
                                 const { applicationMeta } = listing;
@@ -209,10 +218,14 @@ export default function BrowseListings() {
                                     </div>
                                 )
                             })}
+                            <SelectPage />
                         </div>
                     </ActionCard>
+                    
                 </div>
+                
             </div>
+           
             <LogoFiller />
         </>
     );

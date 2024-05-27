@@ -198,7 +198,7 @@ export default function Listing() {
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                         {Object.keys(applicationMeta).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
-                                <p className='capitalize font-medium w-24 sm:w-32'>{labelMapping[entry]}</p>
+                                <p className='capitalize font-semibold w-24 sm:w-32'>{labelMapping[entry]}</p>
                                 <input
                                     className='bg-transparent capitalize w-full outline-none border-none'
                                     placeholder={applicationMeta[entry]}
@@ -217,7 +217,7 @@ export default function Listing() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {Object.keys(SellerMeta).map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
-                                <p className='capitalize font-medium w-30 sm:w-36'>{labelMapping[entry]}</p>
+                                <p className='capitalize font-semibold w-30 sm:w-36'>{labelMapping[entry]}</p>
                                 <input
                                     className='bg-transparent capitalize w-full outline-none border-none'
                                     placeholder={SellerMeta[entry]}

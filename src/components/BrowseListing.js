@@ -143,9 +143,11 @@ export default function BrowseListings() {
                     {/* Add modal content here */}
                 </Modal>
             )}
-             {/*  filter card  */}
-            <div className='flex flex-col gap-4 flex-1'>
+           
+            <div className='flex flex-col gap-4 flex-none'>
                 <div className='flex gap-4'>
+                    
+                      {/*  filter card  */}
                     <FilterCard title={'Filters'}>
                         <div className='flex flex-col gap-4 '>
                             <div className='grid grid-cols-1 shrink-0 '>
@@ -157,7 +159,7 @@ export default function BrowseListings() {
                                         <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
                                         {entry === '' ? (
                                             <div className='flex flex-col gap-1 w-full relative'>
-                                            </div>
+                                            </div>  
                                         ) : (
                                             <input
                                                 className='bg-transparent capitalize w-full outline-none border-none'
@@ -196,7 +198,7 @@ export default function BrowseListings() {
                                             <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 '>
                                                 <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
                                                     {images.map((image, imgIndex) => (
-                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="image max-h-128 max-w-128" style={{ width: '100%', flex: 'none' }} />
+                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="image md:max-h-128 md:max-w-128 " style={{ width: '100%', flex: 'none' }} />
                                                     ))}
                                                 </div>
                                              {/*   <button onClick={(e) => { e.preventDefault(); handlePrevClick(index); }} className='absolute left-1 top-1/2 transform -translate-y-1/2 bg-gray-600 text-white p-2 rounded-full opacity-85 hover:opacity-100'>

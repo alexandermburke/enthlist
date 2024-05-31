@@ -1,10 +1,4 @@
 import React from 'react'
-import SectionWrapper from './Layouts/SectionWrapper'
-import Bio from './Layouts/Bio'
-import Education from './Layouts/Education'
-import WorkExperience from './Layouts/WorkExperience'
-import Skills from './Layouts/Skills'
-import Projects from './Layouts/Projects'
 import { Open_Sans } from 'next/font/google'
 import sortResumeSections from '@/utils'
 import Link from 'next/link'
@@ -15,7 +9,7 @@ const opensans = Open_Sans({
 
 
 export default function ListingViewer(props) {
-    const { userData, resumeSections, demo, isPaid } = props
+ /* const { userData, resumeSections, demo, isPaid } = props
 
     const sections = {
         bio: <Bio viewer val={resumeSections.bio} />,
@@ -56,5 +50,5 @@ export default function ListingViewer(props) {
                 )
             })}
         </div>
-    )
+    ) */
 }

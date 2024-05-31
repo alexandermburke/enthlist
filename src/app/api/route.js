@@ -1,18 +1,22 @@
-import { pipeline } from 'node:stream/promises';
+/* import { pipeline } from 'node:stream/promises';
 import { NextResponse } from "next/server"
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 // app/api/route.js 👈🏽
-import OpenAI from "openai"
+ import OpenAI from "openai"
 
 const OPENAI_APIKEY = process.env.OPENAI_SECRET_KEY
-const openai = new OpenAI({ apiKey: OPENAI_APIKEY })
+const openai = new OpenAI({ apiKey: OPENAI_APIKEY }) 
 
 
 // To handle a GET request to /api
-export async function GET(request) {
-    // Do whatever you want
+
+export async function GET() {
+   // Do whatever you want
     return NextResponse.json({ message: "Hello World" }, { status: 200 })
+// Example in your API route file
+console.log(process.env.OPENAI_API_KEY); // This should print your API key
+// sk-proj-uK2ixu05Rogp98EHByc9T3BlbkFJa0qSpZXryvoTBDowxBLK
 }
 
 // To handle a POST request to /api
@@ -39,7 +43,7 @@ export async function POST(request) {
     } catch (err) {
         console.log('Failed to create completion', err.message)
         return NextResponse.json({ status: err.message }, { status: 500 })
-    }
+    } 
 }
 
-
+*/

@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       maxHeight: {
         '128': '48rem',
+        '100': '48rem'
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -18,9 +18,9 @@ const opensans = Open_Sans({
 });
 
 const completionSteps = [
-    ['Complete your listing', 'fa-solid fa-pen-to-square', 'Fill out your resume in the display below by adding all the sections you feel relevant to your experience; remember to keep your resume to approximately 1 page in length. You can view your resume by selecting the PDF Viewer button beneath, and can print the web page to a PDF that you can save to your local device. Be sure to adjust the print scale to get the perfect PDF fit.'],
-    ['Upload pictures', 'fa-solid fa-scroll', 'Once you have completed your resume, create a new listing, completing all the details relevant to the application. Once you have added in the details in addition to pasting in the application, you can generate your perfect listing and make any final adjustments you feel necessary.'],
-    ['Share your link', 'fa-solid fa-share', 'With your resume complete and saved, you can choose to publish your resume and have a live version at your special link. You can share this link with anyone!']
+    ['Complete your listing', 'fa-solid fa-pen-to-square', 'Fill out your listing in the display below by adding all the sections you feel relevant to your car; remember to keep your description to approximately 1 page in length. You can view your listing by selecting the PDF Viewer button beneath, and can print the web page to a PDF that you can save to your local device. Be sure to adjust the print scale to get the perfect PDF fit.'],
+    ['Upload pictures', 'fa-solid fa-scroll', 'Once you have completed your listing, complete all the details relevant to the car. Once you have added in the details in addition to pasting in the car, you can generate your perfect listing and make any final adjustments you feel necessary.'],
+    ['Share your link', 'fa-solid fa-share', 'With your listing complete and saved, you can choose to publish your listing and have a live version at your special link. You can share this link with anyone!']
 ]
 
 
@@ -184,7 +184,7 @@ export default function Dashboard() {
             )}
             <div className='flex flex-col gap-8 flex-1'>
                  <ActionCard title={'Setup your enthusiastlist.app listing'}>
-                    <div className='flex items-stretch gap-5'>
+                    <div className='flex items-stretch gap-5 overflow-x-scroll '>
                         {completionSteps.map((step, stepIndex) => {
                             return (
                                 <button onClick={() => {

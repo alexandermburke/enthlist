@@ -16,7 +16,6 @@ export async function GET() {
     return NextResponse.json({ message: "Hello World" }, { status: 200 })
 // Example in your API route file
 console.log(process.env.OPENAI_API_KEY); // This should print your API key
-// sk-proj-uK2ixu05Rogp98EHByc9T3BlbkFJa0qSpZXryvoTBDowxBLK
 }
 
 // To handle a POST request to /api

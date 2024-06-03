@@ -86,6 +86,7 @@ export default function Header() {
         )
         menuActions = (
             <nav className='flex flex-col gap-2'>
+                <Link href={'/browse'} className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200'><p>Browse</p></Link>
                 <Link href={'/admin'} className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200'><p>Dashboard</p></Link>
                 <Link href={'/admin/account'} className='p-2 rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200'><p>Account</p></Link>
                 <button className='p-2 text-left rounded-lg border-solid border border-blue-50 hover:opacity-60 duration-200' onClick={logout}><p>Logout</p></button>

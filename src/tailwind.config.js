@@ -8,9 +8,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      height: {
+        '128': '48rem',
+        '100': '46rem'
+      },
       maxHeight: {
         '128': '48rem',
-        '100': '48rem'
+        '100': '46rem'
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

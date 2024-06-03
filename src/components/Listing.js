@@ -9,10 +9,9 @@ import Button from './Button';
 import LogoFiller from './LogoFiller';
 import { useAuth } from '@/context/AuthContext';
 import { db, storage } from '@/firebase';
-import { doc, updateDoc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Modal from './Modal';
 
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
@@ -41,10 +40,9 @@ export default function Listing() {
         sellertype: ''
     };
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
-    const [SellerMeta, setSellerMeta] = useState(defaultSellerData);
+    const [sellerMeta, setSellerMeta] = useState(defaultSellerData);
     const [carDescription, setCarPosting] = useState('');
     const [imagePostings, setImagePostings] = useState([]); // Array to store multiple image URLs
-    const [applicationID, setApplicationID] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const { userDataObj, currentUser, setUserDataObj } = useAuth();
@@ -103,19 +101,49 @@ export default function Listing() {
     };
 
     useEffect(() => {
-        if (!userDataObj || !searchParams) { return }
+        if (!userDataObj || !searchParams) return;
         const applicationName = searchParams.get('id');
-        let listings = userDataObj?.listings || {};
         if (!applicationName) {
+            console.error("No application ID found in URL parameters.");
             return;
         }
-        setApplicationMeta(curr => ({ ...curr, id: applicationName }));
-        if (!(applicationName in listings)) { return }
-        const coverLetter = listings[applicationName];
-        const { applicationMeta: localApplicationMeta, carDescription: localJobPosting } = coverLetter;
-        console.log("Fetched applicationMeta:", localApplicationMeta); // Debugging
-        localApplicationMeta && setApplicationMeta(localApplicationMeta);
-        localJobPosting && setCarPosting(localJobPosting);
+
+        const fetchData = async () => {
+            let listings = userDataObj?.listings || {};
+            if (applicationName in listings) {
+                const coverLetter = listings[applicationName];
+                const { applicationMeta: localApplicationMeta, carDescription: localCarPosting } = coverLetter;
+                setApplicationMeta(localApplicationMeta || defaultApplicationData);
+                setCarPosting(localCarPosting || '');
+                setImagePostings(localApplicationMeta?.images || []);
+            } else {
+                try {
+                    const docRef = doc(db, 'listings', applicationName);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        console.log("Fetched data from Firebase:", data); // Logging fetched data
+                        
+                        // Extract the data based on the fetched structure
+                        const listingData = data[applicationName];
+                        if (listingData) {
+                            setApplicationMeta(listingData.applicationMeta || defaultApplicationData);
+                            setSellerMeta(listingData.SellerMeta || defaultSellerData);
+                            setCarPosting(listingData.carDescription || '');
+                            setImagePostings(listingData.applicationMeta?.images || []);
+                        } else {
+                            console.error("No listing data found for ID:", applicationName);
+                        }
+                    } else {
+                        console.error("No document found in Firebase with ID:", applicationName);
+                    }
+                } catch (error) {
+                    console.error("Error fetching document from Firebase:", error);
+                }
+            }
+        };
+
+        fetchData();
     }, [userDataObj, searchParams]);
 
     useEffect(() => {
@@ -158,8 +186,7 @@ export default function Listing() {
     if (!applicationMeta.id) {
         return (
             <>
-                  <p className={'font-medium text-lg blueGradient sm:text-xl md:text-1xl py-2'}>{'Error'} </p>
-                   
+                <p className={'font-medium text-lg blueGradient sm:text-xl md:text-1xl py-2 flex items-center'}>{'Loading Please Wait .. '} </p>
                 <LogoFiller />
             </>
         );
@@ -215,14 +242,14 @@ export default function Listing() {
                         <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Version'}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {Object.keys(SellerMeta).map((entry, entryIndex) => (
+                        {Object.keys(sellerMeta).map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
                                 <p className='capitalize font-semibold w-30 sm:w-36'>{labelMapping[entry]}</p>
                                 <input
                                     className='bg-transparent capitalize w-full outline-none border-none'
-                                    placeholder={SellerMeta[entry]}
-                                    value={SellerMeta[entry]}
-                                    onChange={(e) => setSellerMeta({ ...SellerMeta, [entry]: e.target.value })}
+                                    placeholder={sellerMeta[entry]}
+                                    value={sellerMeta[entry]}
+                                    onChange={(e) => setSellerMeta({ ...sellerMeta, [entry]: e.target.value })}
                                 />   
                             </div>
                         ))}

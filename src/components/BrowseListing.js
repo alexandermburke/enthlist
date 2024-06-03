@@ -13,14 +13,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SelectPage from './SelectPage';
 
-
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
 
 export default function BrowseListings() {
-
     let defaultApplicationData = {
         company: '',
         model: '',
@@ -57,6 +55,8 @@ export default function BrowseListings() {
     const [currentImageIndexes, setCurrentImageIndexes] = useState({});
     const [transitions, setTransitions] = useState({});
     const { currentUser, userDataObj } = useAuth();
+
+    const [isFilterTabVisible, setIsFilterTabVisible] = useState(true); // State for filter tab visibility
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -136,6 +136,10 @@ export default function BrowseListings() {
         });
     };
 
+    const toggleFilterTab = () => {
+        setIsFilterTabVisible(!isFilterTabVisible); // Toggle filter tab visibility
+    };
+
     return (
         <>
             {showModal && (
@@ -144,45 +148,61 @@ export default function BrowseListings() {
                 </Modal>
             )}
            
-            <div className='flex flex-col gap-4 flex-none'>
+           <div className='flex flex-col gap-4 flex-none'>
+    <div className='flex justify-between items-center gap-4'>
+        <button onClick={toggleFilterTab} className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
+            <div className='absolute inset-0 blueBackground' />
+            <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
+                <p>{isFilterTabVisible ? 'Hide Filters' : 'Show Filters'}</p>
+            </div>
+        </button>
+        <button className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
+            <div className='absolute inset-0 blueBackground' />
+            <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
+                <p>Sort by</p>
+                <i className="fa-solid fa-chevron-down ml-2"></i> {/* Adjust margin as needed */}
+            </div>
+        </button>
+    </div>
+
                 <div className='flex gap-4'>
-                    
-                      {/*  filter card  */}
-                    <FilterCard title={'Filters'}>
-                        <div className='flex flex-col gap-4 '>
-                            <div className='grid grid-cols-1 shrink-0 '>
-                                {/* Add labels for listing columns */}
-                            </div>
-                            {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
-                                return (
-                                    <div className='flex items-center gap-5' key={entryIndex}>
-                                        <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
-                                        {entry === '' ? (
-                                            <div className='flex flex-col gap-1 w-full relative'>
-                                            </div>  
-                                        ) : (
-                                            <input
-                                                className='bg-transparent capitalize w-full outline-none border-none'
-                                                placeholder={placeHolders[entry]}
-                                                value={applicationMeta[entry]}
-                                                onChange={(e) => setApplicationMeta({ ...applicationMeta, [entry]: e.target.value })} />
-                                        )}
-                                    </div>
-                                )
-                            })}
+                    {isFilterTabVisible && (
+                        <FilterCard title={'Filters'}>
+                            <div className='flex flex-col gap-4 '>
+                                <div className='grid grid-cols-1 shrink-0 '>
+                                    {/* Add labels for listing columns */}
+                                </div>
+                                {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
+                                    return (
+                                        <div className='flex items-center gap-5' key={entryIndex}>
+                                            <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
+                                            {entry === '' ? (
+                                                <div className='flex flex-col gap-1 w-full relative'>
+                                                </div>  
+                                            ) : (
+                                                <input
+                                                    className='bg-transparent capitalize w-full outline-none border-none'
+                                                    placeholder={placeHolders[entry]}
+                                                    value={applicationMeta[entry]}
+                                                    onChange={(e) => setApplicationMeta({ ...applicationMeta, [entry]: e.target.value })} />
+                                            )}
+                                        </div>
+                                    )
+                                })}
                                 {/*  divs for spacing  */}
-                               <div className='flex gap-5'></div>
-                               <div className='flex gap-5'></div>
+                                <div className='flex gap-5'></div>
+                                <div className='flex gap-5'></div>
 
-                                   {/*  filter button  */}
-                              <button onClick={handleFilter} className='ml-1  duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
-                                <div className='absolute inset-0 blueBackground ' />
-                                <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white '>{'Filter'}</p>
-                            </button>
-                        </div>
-                    </FilterCard>
+                                {/*  filter button  */}
+                                <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
+                                    <div className='absolute inset-0 blueBackground ' />
+                                    <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white '>{'Filter'}</p>
+                                </button>
+                            </div>
+                        </FilterCard>
+                    )}
 
-                             {/*  listing selection  */}
+                    {/*  listing selection  */}
                     <ActionCard title={'Listings'}>
                         <div className='flex flex-col gap-4 '>
                             <div className='grid grid-cols-1 shrink-0 '>
@@ -195,19 +215,12 @@ export default function BrowseListings() {
                                 return (
                                     <div className='grid grid-cols-1 gap-4' key={index}>
                                         <Link href={'/browse/listing?id=' + (applicationMeta?.id || listing.id)}>
-                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 '>
-                                                <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
+                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 w-full'>
+                                                <div className="slider flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none' }}>
                                                     {images.map((image, imgIndex) => (
-                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="image md:max-h-128 md:max-w-128 " style={{ width: '100%', flex: 'none' }} />
+                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="w-full max-h-100 object-cover" />
                                                     ))}
                                                 </div>
-                                             {/*   <button onClick={(e) => { e.preventDefault(); handlePrevClick(index); }} className='absolute left-1 top-1/2 transform -translate-y-1/2 bg-gray-600 text-white p-2 rounded-full opacity-85 hover:opacity-100'>
-                                                    &lt;
-                                                </button>
-                                                <button onClick={(e) => { e.preventDefault(); handleNextClick(index); }} className='absolute right-1 top-1/2 transform -translate-y-1/2 bg-gray-600 text-white p-2 rounded-full opacity-85 hover:opacity-100'>
-                                                    &gt;
-                                                </button> */} 
-                                               
                                                 <div className='flex flex-col gap-0 p-1 m-1 capitalize'>
                                                     <p className='truncate'>{applicationMeta?.company && applicationMeta?.model ? `${applicationMeta.year + ' ' + applicationMeta.company} ${applicationMeta.model}` : ''}</p>
                                                     <p className='truncate'>{applicationMeta?.id + ' • ' + applicationMeta?.miles + ' Miles'}</p>
@@ -223,9 +236,7 @@ export default function BrowseListings() {
                             <SelectPage />
                         </div>
                     </ActionCard>
-                    
                 </div>
-                
             </div>
            
             <LogoFiller />

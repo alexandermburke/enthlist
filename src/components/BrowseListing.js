@@ -56,7 +56,8 @@ export default function BrowseListings() {
     const [transitions, setTransitions] = useState({});
     const { currentUser, userDataObj } = useAuth();
 
-    const [isFilterTabVisible, setIsFilterTabVisible] = useState(true); // State for filter tab visibility
+    const [isFilterTabVisible, setIsFilterTabVisible] = useState(false); // State for filter tab visibility
+    const [isSortbyTabVisible, setIsSortbyTabVisible] = useState(false); // State for sort by tab visibility
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -136,8 +137,12 @@ export default function BrowseListings() {
         });
     };
 
+    // Toggle constants
     const toggleFilterTab = () => {
-        setIsFilterTabVisible(!isFilterTabVisible); // Toggle filter tab visibility
+        setIsFilterTabVisible(!isFilterTabVisible);
+    };
+    const toggleSortbyTab = () => {
+        setIsSortbyTabVisible(!isSortbyTabVisible);
     };
 
     return (
@@ -147,29 +152,30 @@ export default function BrowseListings() {
                     {/* Add modal content here */}
                 </Modal>
             )}
-           
-           <div className='flex flex-col gap-4 flex-none'>
-    <div className='flex justify-between items-center gap-4'>
-        <button onClick={toggleFilterTab} className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
-            <div className='absolute inset-0 blueBackground' />
-            <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
-                <p>{isFilterTabVisible ? 'Hide Filters' : 'Show Filters'}</p>
-            </div>
-        </button>
-        <button className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
-            <div className='absolute inset-0 blueBackground' />
-            <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
-                <p>Sort by</p>
-                <i className="fa-solid fa-chevron-down ml-2"></i> {/* Adjust margin as needed */}
-            </div>
-        </button>
-    </div>
+
+            <div className='flex flex-col gap-4 flex-none'>
+                <div className='flex justify-between items-center gap-4'>
+                    <button onClick={toggleFilterTab} className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
+                        <div className='absolute inset-0 blueBackground' />
+                        <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
+                            <p>{isFilterTabVisible ? 'Hide Filters' : 'Show Filters'}</p>
+                        </div>
+                    </button>
+                    <button onClick={toggleSortbyTab} className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
+                        <div className='absolute inset-0 blueBackground' />
+                        <div className={'h-10 px-12 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white ' + poppins.className}>
+                            <p>Sort by</p>
+                            <i className="fa-solid fa-chevron-down ml-2"></i>
+                        </div>
+                    </button>
+                </div>
 
                 <div className='flex gap-4'>
+                    {/* Filter tab */}
                     {isFilterTabVisible && (
                         <FilterCard title={'Filters'}>
-                            <div className='flex flex-col gap-4 '>
-                                <div className='grid grid-cols-1 shrink-0 '>
+                            <div className='flex flex-col gap-4'>
+                                <div className='grid grid-cols-1 shrink-0'>
                                     {/* Add labels for listing columns */}
                                 </div>
                                 {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
@@ -178,7 +184,7 @@ export default function BrowseListings() {
                                             <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
                                             {entry === '' ? (
                                                 <div className='flex flex-col gap-1 w-full relative'>
-                                                </div>  
+                                                </div>
                                             ) : (
                                                 <input
                                                     className='bg-transparent capitalize w-full outline-none border-none'
@@ -189,24 +195,24 @@ export default function BrowseListings() {
                                         </div>
                                     )
                                 })}
-                                {/*  divs for spacing  */}
+                                {/* divs for spacing */}
                                 <div className='flex gap-5'></div>
                                 <div className='flex gap-5'></div>
 
-                                {/*  filter button  */}
-                                <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow'>
-                                    <div className='absolute inset-0 blueBackground ' />
-                                    <p className='h-full px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white '>{'Filter'}</p>
+                                {/* filter button */}
+                                <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden p-0.5 rounded-full relative blueShadow'>
+                                    <div className='absolute inset-0 blueBackground' />
+                                    <p className='h-10 px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white'>{'Filter'}</p>
                                 </button>
                             </div>
                         </FilterCard>
                     )}
 
-                    {/*  listing selection  */}
+                    {/* listing selection */}
                     <ActionCard title={'Listings'}>
-                        <div className='flex flex-col gap-4 '>
-                            <div className='grid grid-cols-1 shrink-0 '>
-                                {/*  div for spacing */}
+                        <div className='flex flex-col gap-4'>
+                            <div className='grid grid-cols-1 shrink-0'>
+                                {/* div for spacing */}
                             </div>
                             {listings.map((listing, index) => {
                                 const { applicationMeta } = listing;
@@ -218,7 +224,7 @@ export default function BrowseListings() {
                                             <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 w-full'>
                                                 <div className="slider flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none' }}>
                                                     {images.map((image, imgIndex) => (
-                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="w-full max-h-100 object-cover" />
+                                                        <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="w-full h-52 sm:h-100 object-cover flex-shrink-0" />
                                                     ))}
                                                 </div>
                                                 <div className='flex flex-col gap-0 p-1 m-1 capitalize'>
@@ -236,9 +242,32 @@ export default function BrowseListings() {
                             <SelectPage />
                         </div>
                     </ActionCard>
+
+                    {/* Sort by tab */}
+                    {isSortbyTabVisible && (
+                        <FilterCard title={'Sort by'}>
+                            <div className='flex flex-col gap-4'>
+                                <div className='grid grid-cols-1 shrink-0'>
+                                    {/* Add labels for sorting columns */}
+                                </div>
+                                        </div>
+                                  
+                              
+                                {/* divs for spacing */}
+                                <div className='flex gap-5'></div>
+                                <div className='flex gap-5'></div>
+
+                                {/* sort button */}
+                                <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden p-0.5 rounded-full relative blueShadow'>
+                                    <div className='absolute inset-0 blueBackground' />
+                                    <p className='h-10 px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white'>{'Sort'}</p>
+                                </button>
+                            
+                        </FilterCard>
+                    )}
                 </div>
             </div>
-           
+
             <LogoFiller />
         </>
     );

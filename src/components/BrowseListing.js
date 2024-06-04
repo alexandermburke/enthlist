@@ -7,6 +7,7 @@ import { Poppins, Open_Sans } from 'next/font/google';
 import React from 'react';
 import ActionCard from './ActionCard';
 import FilterCard from './FilterCard';
+import SortbyCard from './SortbyCard';
 import LogoFiller from './LogoFiller';
 import Modal from './Modal';
 import Link from 'next/link';
@@ -175,9 +176,6 @@ export default function BrowseListings() {
                     {isFilterTabVisible && (
                         <FilterCard title={'Filters'}>
                             <div className='flex flex-col gap-4'>
-                                <div className='grid grid-cols-1 shrink-0'>
-                                    {/* Add labels for listing columns */}
-                                </div>
                                 {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
                                     return (
                                         <div className='flex items-center gap-5' key={entryIndex}>
@@ -245,7 +243,7 @@ export default function BrowseListings() {
 
                     {/* Sort by tab */}
                     {isSortbyTabVisible && (
-                        <FilterCard title={'Sort by'}>
+                        <SortbyCard title={'Sort by'}>
                             <div className='flex flex-col gap-4'>
                                 <div className='grid grid-cols-1 shrink-0'>
                                     {/* Add labels for sorting columns */}
@@ -253,17 +251,19 @@ export default function BrowseListings() {
                                         </div>
                                   
                               
+                                        <p className='h-10 px-3 grid place-items-center relative z-10 bg-white rounded-full'>{'To be added..'}</p>
                                 {/* divs for spacing */}
                                 <div className='flex gap-5'></div>
                                 <div className='flex gap-5'></div>
 
+                                <div className='flex gap-5'></div>
                                 {/* sort button */}
                                 <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden p-0.5 rounded-full relative blueShadow'>
                                     <div className='absolute inset-0 blueBackground' />
                                     <p className='h-10 px-3 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent hover:text-white'>{'Sort'}</p>
                                 </button>
                             
-                        </FilterCard>
+                        </SortbyCard>
                     )}
                 </div>
             </div>

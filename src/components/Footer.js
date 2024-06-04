@@ -14,7 +14,7 @@ export default function Footer() {
                             <h1 className={'text-xl px-3 sm:text-2xl  sm:px-4 ' + poppins.className}>enthusiastlist.app</h1>
                         </Link>
                     </div>
-                    <p className='mx-auto text-sm'>Copyright © 2024 Burke Software LLC</p>
+                    <p className='mx-auto text-sm'>Copyright © 2024 Alexander Burke</p>
                 </div>
                 <div className='flex flex-col sm:flex-row gap-10 sm:gap-14 md:gap-20'>
 

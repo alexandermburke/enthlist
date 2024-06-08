@@ -14,10 +14,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SelectPage from './SelectPage';
 
+
+const ITEMS_PER_PAGE = 4;
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
+
 
 export default function BrowseListings() {
     let defaultApplicationData = {
@@ -32,7 +35,7 @@ export default function BrowseListings() {
         seats: '',
         transmission: '',
         price: '',
-        images: [] // Change to an array to store multiple image URLs
+        images: []
     };
 
     const placeHolders = {
@@ -59,6 +62,8 @@ export default function BrowseListings() {
 
     const [isFilterTabVisible, setIsFilterTabVisible] = useState(false); // State for filter tab visibility
     const [isSortbyTabVisible, setIsSortbyTabVisible] = useState(false); // State for sort by tab visibility
+    const [currentPage, setCurrentPage] = useState(1);
+    const [fadeTransition, setFadeTransition] = useState(false);
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -138,6 +143,16 @@ export default function BrowseListings() {
         });
     };
 
+    const handlePageChange = (pageNumber) => {
+        setFadeTransition(true);
+        setTimeout(() => {
+            setCurrentPage(pageNumber);
+            setFadeTransition(false);
+        }, 300); // Duration of the fade-out transition
+    };
+
+    const paginatedListings = listings.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
     // Toggle constants
     const toggleFilterTab = () => {
         setIsFilterTabVisible(!isFilterTabVisible);
@@ -208,11 +223,11 @@ export default function BrowseListings() {
 
                     {/* listing selection */}
                     <ActionCard title={'Listings'}>
-                        <div className='flex flex-col gap-4'>
+                        <div className={`flex flex-col gap-4 transition-opacity duration-300 ${fadeTransition ? 'opacity-0' : 'opacity-100'}`}>
                             <div className='grid grid-cols-1 shrink-0'>
                                 {/* div for spacing */}
                             </div>
-                            {listings.map((listing, index) => {
+                            {paginatedListings.map((listing, index) => {
                                 const { applicationMeta } = listing;
                                 const currentImageIndex = currentImageIndexes[index] || 0;
                                 const images = applicationMeta?.images || [];
@@ -237,7 +252,16 @@ export default function BrowseListings() {
                                     </div>
                                 )
                             })}
-                            <SelectPage />
+                        </div>
+                        <div className='flex justify-center mt-4'>
+                            {Array.from({ length: Math.ceil(listings.length / ITEMS_PER_PAGE) }, (_, i) => i + 1).map(pageNumber => (
+                                <button
+                                    key={pageNumber}
+                                    onClick={() => handlePageChange(pageNumber)}
+                                    className={`mx-1 px-3 py-1 rounded-full ${currentPage === pageNumber ? 'bg-indigo-500 text-white' : 'bg-white text-indigo-500'}`}>
+                                    {pageNumber}
+                                </button>
+                            ))}
                         </div>
                     </ActionCard>
 
@@ -255,7 +279,6 @@ export default function BrowseListings() {
                                 {/* divs for spacing */}
                                 <div className='flex gap-5'></div>
                                 <div className='flex gap-5'></div>
-
                                 <div className='flex gap-5'></div>
                                 {/* sort button */}
                                 <button onClick={handleFilter} className='ml-1 duration-200 overflow-hidden p-0.5 rounded-full relative blueShadow'>

@@ -5,7 +5,6 @@ import ActionCard from './ActionCard';
 import Link from 'next/link';
 import InputWrapper from './InputWrapper';
 import { Open_Sans } from 'next/font/google';
-import Button from './Button';
 import LogoFiller from './LogoFiller';
 import { useAuth } from '@/context/AuthContext';
 import { db, storage } from '@/firebase';
@@ -39,6 +38,10 @@ export default function Listing() {
         contactname: '',
         sellertype: ''
     };
+
+    const applicationDataOrder = ['company', 'model', 'status', 'miles', 'exterior', 'interior', 'seats', 'transmission']; 
+    const sellerDataOrder = ['city', 'state', 'instagram', 'contactname', 'sellertype'];
+
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
     const [sellerMeta, setSellerMeta] = useState(defaultSellerData);
     const [carDescription, setCarPosting] = useState('');
@@ -81,17 +84,17 @@ export default function Listing() {
     };
 
     const labelMapping = {
-        company: 'Company',
+        company: 'Make',
         model: 'Model',
         year: 'Year',
-        status: 'Status',
-        id: 'ID',
+        status: 'Title Status',
+        id: 'VIN',
         miles: 'Miles',
-        exterior: 'Exterior',
-        interior: 'Interior',
+        exterior: 'Exterior Color',
+        interior: 'Interior Color',
         seats: 'Seats',
         transmission: 'Transmission',
-        price: 'Price',
+        price: 'Asking Price',
         images: 'Images',
         city: 'City',
         sellertype: 'Seller Type',
@@ -159,7 +162,7 @@ export default function Listing() {
             const intervalId = setInterval(() => {
                 setTransitions(true);
                 setCurrentImageIndex(prevIndex => (prevIndex + 1) % imagePostings.length);
-            }, 25000); // Change image every 15 seconds
+            }, 15000); // Change image every 15 seconds
 
             return () => clearInterval(intervalId);
         }
@@ -202,7 +205,7 @@ export default function Listing() {
                 </div>
 
                 {/*  images transform  */}
-                <ActionCard title={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} subTitle={''}>
+                <ActionCard title={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} subTitle={applicationMeta.price}>
                     <div className='grid grid-cols-1 gap-4 '>
                         <div className='relative rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow max-h-128 max-w-128'>
                             <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
@@ -223,7 +226,7 @@ export default function Listing() {
                 {/*  car listing details  */}
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                        {Object.keys(applicationMeta).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => (
+                        {applicationDataOrder.map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
                                 <p className='capitalize font-semibold w-24 sm:w-32'>{labelMapping[entry]}</p>
                                 <input
@@ -242,7 +245,7 @@ export default function Listing() {
                         <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Version'}</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {Object.keys(sellerMeta).map((entry, entryIndex) => (
+                    {sellerDataOrder.map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
                                 <p className='capitalize font-semibold w-30 sm:w-36'>{labelMapping[entry]}</p>
                                 <input

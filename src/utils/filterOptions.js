@@ -1,13 +1,13 @@
 const filterOptions = {
     company: ['BMW', 'Ford', 'Audi'],
     model: ['M3', 'A4', 'C-Class'],
-    year: ['2018', '2019', '2020'],
-    status: ['clean', 'used', 'new'],
+    year: ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017'],
+    status: ['clean', 'Rebuilt', 'Salvage'],
     miles: ['10,000', '20,000', '30,000'],
-    exterior: ['alpine white', 'black', 'blue'],
+    exterior: ['white', 'black', 'blue', 'grey', 'red', 'orange', 'yellow', 'green', 'other'],
     interior: ['black', 'white', 'red'],
-    seats: ['competition', 'standard', 'luxury'],
-    transmission: ['DCT', 'manual', 'automatic'],
+    seats: ['competition', 'base', 'recaros'],
+    transmission: ['DCT', 'Manual', 'ZF8', 'Automatic'],
     price: ['$50,000', '$60,000', '$70,000']
 };
 

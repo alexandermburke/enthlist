@@ -249,12 +249,12 @@ export default function BrowseListings() {
                     </div>
                 </div>
 
+                       {/* Filter tab */}
                 <div className='flex gap-4'>
-                    {/* Filter tab */}
-                    {isFilterTabVisible && (
+                   {isFilterTabVisible && (
                         <FilterCard title={'Filters'}>
                             <div className='flex flex-col gap-4'>
-                                {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
+                                {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images' && val !== 'price' && val !== 'miles').map((entry, entryIndex) => {
                                     return (
                                         <div className='flex flex-col gap-1 w-full relative' key={entryIndex}>
                                             <button onClick={() => toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg')}>

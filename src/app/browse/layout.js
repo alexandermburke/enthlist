@@ -14,21 +14,13 @@ export default function SubLayout({ children }) {
         content = (
             <div className='flex items-center justify-center flex-col flex-1'>
                 <i className="fa-solid fa-spinner text-white animate-spin text-4xl sm:text-5xl md:text-6xl"></i>
-      
             </div>
-        )
-    }
-
-    if (!currentUser && !loading) {
-        content = (
-            <Login />
         )
     }
 
     return (
         <CoolLayout>
             <Main>
-          
                 {content}
             </Main>
         </CoolLayout>

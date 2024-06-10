@@ -205,7 +205,7 @@ export default function Listing() {
                 </div>
 
                 {/*  images transform  */}
-                <ActionCard title={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} subTitle={applicationMeta.price}>
+                <ActionCard title={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} priceTitle={applicationMeta.price}>
                     <div className='grid grid-cols-1 gap-4 '>
                         <div className='relative rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow max-h-128 max-w-128'>
                             <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
@@ -260,10 +260,10 @@ export default function Listing() {
 
                     {/*  car listing detail buttons  */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                        <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                            <p className=''>Message Seller</p>
-                            <i className="fa-regular fa-comments"></i>
-                        </button>
+                    <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
+                        <p className=''>Message Seller</p>
+                        <i className="fa-regular fa-comments"></i>
+                    </Link>
                         <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>Report Listing</p>
                         </button>

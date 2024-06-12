@@ -11,6 +11,7 @@ import { db, storage } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Head from 'next/head';
 
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
@@ -197,6 +198,14 @@ export default function Listing() {
 
     return (
         <>
+            <Head>
+                <title>{`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`}</title>
+                <meta property="og:title" content={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} />
+                <meta property="og:description" content={carDescription} />
+                <meta property="og:image" content={imagePostings[0] || '/default-image.jpg'} />
+                <meta property="og:url" content={`https://yourdomain.com/listing/${applicationMeta.id}`} />
+                <meta property="og:type" content="website" />
+            </Head>
             <div className='flex flex-col gap-8 flex-1 capitalize '>
                 <div className='flex items-center justify-between gap-4'>
                     <Link href={'/browse'} className='flex items-center mr-auto justify-center gap-4 bg-white px-4 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
@@ -273,7 +282,7 @@ export default function Listing() {
                 {/*  description  */}
                 <ActionCard title={'Description'}>
                     <InputWrapper value={carDescription}>
-                        <textarea value={carDescription} placeholder='No description ...' onChange={(e) => setCarPosting(e.target.value)} className='unstyled h-full resize-none absolute inset-0 max-h-[600px]'></textarea>
+                        <textarea value={carDescription} placeholder='No description ...' onChange={(e) => setCarPosting(e.target.value)} className='unstyled h-full resize-none absolute inset-0'></textarea>
                     </InputWrapper>
                 </ActionCard>
             </div>

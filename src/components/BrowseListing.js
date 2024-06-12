@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase';
@@ -11,8 +11,9 @@ import SearchBtn from './SearchButton';
 import LogoFiller from './LogoFiller';
 import Modal from './Modal';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { filterOptions, sortOptions } from '../utils/filterOptions';  // Correct the import path
+import { usePathname, useSearchParams } from 'next/navigation';
+import { filterOptions, sortOptions } from '../utils/filterOptions';
+import Head from 'next/head';
 
 const ITEMS_PER_PAGE = 4;
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
@@ -64,6 +65,10 @@ export default function BrowseListings() {
     const [dropdownVisibility, setDropdownVisibility] = useState({});
     const [sortOption, setSortOption] = useState('');
     const [showSortOptions, setShowSortOptions] = useState(false);
+
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const [listingData, setListingData] = useState(null);
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -212,8 +217,45 @@ export default function BrowseListings() {
         setIsFilterTabVisible(!isFilterTabVisible);
     };
 
+    useEffect(() => {
+        const fetchListingData = async (id) => {
+            try {
+                const docRef = doc(db, 'listings', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setListingData(docSnap.data());
+                }
+            } catch (error) {
+                console.error('Error fetching listing data:', error);
+            }
+        };
+
+        const path = pathname;
+        const match = path.match(/\/listing\/(\w+)/);
+        if (match) {
+            const id = match[1];
+            fetchListingData(id);
+        }
+    }, [pathname]);
+
+    const defaultDescription = "Superfast cool vehicles for sale";
+    const defaultImage = "/default-image.jpg";
+
     return (
         <>
+            <Head>
+                <title>{listingData ? `${listingData.year} ${listingData.company} ${listingData.model}` : "Listing"}</title>
+                <meta
+                    name="description"
+                    content={listingData ? listingData.carDescription : defaultDescription}
+                />
+                <meta property="og:title" content={listingData ? `${listingData.year} ${listingData.company} ${listingData.model}` : "Listing"} />
+                <meta property="og:description" content={listingData ? listingData.carDescription : defaultDescription} />
+                <meta property="og:image" content={listingData && listingData.images.length > 0 ? listingData.images[0] : defaultImage} />
+                <meta property="og:url" content={`https://yourdomain.com${pathname}`} />
+                <meta property="og:type" content="website" />
+            </Head>
+
             {showModal && (
                 <Modal handleCloseModal={() => { setShowModal(null) }}>
                     {/* Add modal content here */}

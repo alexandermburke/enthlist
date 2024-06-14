@@ -134,7 +134,7 @@ export default function Dashboard() {
                 <p className=''><i>Please either delete some listings, or upgrade your account to continue.</i></p>
                 <p className='flex-1'>Upgrading your account allows you to manage up to <b>5</b> listings, and gives you access to auto <b> listing reposting.</b></p>
                 <div className='flex items-center gap-4'>
-                    <button onClick={() => { setShowModal(null) }} className=' w-fit p-4 rounded-full mx-auto bg-white border border-solid border-blue    -100 px-8 duration-200 hover:opacity-60'>Go back</button>
+                    <button onClick={() => { setShowModal(null) }} className=' w-fit p-4 rounded-full mx-auto bg-white border border-solid border-indigo-100 px-8 duration-200 hover:opacity-60'>Go back</button>
                     <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
                 </div>
             </div>
@@ -149,7 +149,7 @@ export default function Dashboard() {
                     <p className=''><i>Deleting a listing is permanent!</i></p>
                     <p className='flex-1 capitalize'><b>VIN</b> {ListingToDelete.replaceAll('_', ' ')}</p>
                     <div className='flex items-center gap-4'>
-                        <button onClick={() => { setShowModal(null) }} className=' p-4 rounded-full mx-auto bg-white border border-solid border-blue-100 text-blue-400  px-8 duration-200 hover:opacity-60'>Go back</button>
+                        <button onClick={() => { setShowModal(null) }} className=' p-4 rounded-full mx-auto bg-white border border-solid border-indigo-100 text-indigo-400  px-8 duration-200 hover:opacity-60'>Go back</button>
                         <button onClick={handleDeleteListing} className=' flex-1 p-4 text-pink-400 rounded-full mx-auto bg-white border border-solid border-pink-400 px-8 duration-200 hover:opacity-60'>Confirm Delete</button>
                         <Button text={'Upgrade Account'} clickHandler={() => { router.push('/admin/billing') }} />
                         {/* <Button text={'Upgrade Account ⭐️'} clickHandler={() => { router.push('/admin/billing') }} /> */}
@@ -215,7 +215,7 @@ export default function Dashboard() {
                 <ActionCard title={'Listings'} actions={numberOfListings >= 20 ? null : (
                     <div className='flex items-center gap-4'>
                         {numberOfListings < 20 && (
-                            <button onClick={handleCreateListing} className='flex items-center justify-center gap-4 border border-solid border-indigo-200  px-4 py-2 rounded-full text-xs sm:text-sm text-indigo-400 duration-200 hover:opacity-50'>
+                            <button onClick={handleCreateListing} className='flex items-center justify-center gap-4 border border-solid border-indigo-200 px-4 py-2 rounded-full text-xs sm:text-sm text-indigo-400 duration-200 hover:opacity-50'>
                                 <p className=''>Create new</p>
                             </button>
                         )}
@@ -242,7 +242,7 @@ export default function Dashboard() {
                                     }} className='flex items-center justify-center gap-4 rounded-full text-xs sm:text-sm text-pink-400 duration-200  absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 group-hover:opacity-100 opacity-0 hover:text-pink-200'>
                                         <i className="fa-regular fa-trash-can"></i>
                                     </button>
-                                    <Link href={'/admin/application?id=' + (applicationMeta?.id || ListingName)} className='grid shrink-0 capitalize grid-cols-4 border border-solid border-blue-50 duration-200 hover:bg-blue-50 rounded-lg overflow-hidden '>
+                                    <Link href={'/admin/application?id=' + (applicationMeta?.id || ListingName)} className='grid shrink-0 capitalize grid-cols-4 border border-solid border-indigo-50 duration-200 hover:bg-indigo-50 rounded-lg overflow-hidden '>
                                         <div className='p-2'>
                                             <p className='truncate hover:text-indigo-400'>{applicationMeta?.id}</p>
                                         </div>
@@ -270,7 +270,7 @@ export default function Dashboard() {
                         <p className=''>{savingResume ? 'Saving ...' : 'Save Listing'}</p>
                         <i className="fa-solid fa-floppy-disk"></i>
                     </button>
-                    <Link href={'/resume?user=' + currentUser.displayName} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-blue-100 bg-white p-4 rounded-full text-indigo-400 duration-200 hover:opacity-50 '}>
+                    <Link href={'/resume?user=' + currentUser.displayName} target='_blank' className={'flex items-center justify-center gap-2 border border-solid border-indigo-100 bg-white p-4 rounded-full text-indigo-400 duration-200 hover:opacity-50 '}>
                         <p className=''>PDF Viewer</p>
                         <i className="fa-solid fa-arrow-up-right-from-square"></i>
                     </Link>

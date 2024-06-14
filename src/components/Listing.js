@@ -202,8 +202,8 @@ export default function Listing() {
                 <title>{`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`}</title>
                 <meta property="og:title" content={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} />
                 <meta property="og:description" content={carDescription} />
-                <meta property="og:image" content={imagePostings[0] || '/default-image.jpg'} />
-                <meta property="og:url" content={`https://yourdomain.com/listing/${applicationMeta.id}`} />
+                <meta property="og:image" content={imagePostings[0] || '/image0.jpg'} />
+                <meta property="og:url" content={`https://enthusiastlist.app/browse/listing/${applicationMeta.id}`} />
                 <meta property="og:type" content="website" />
             </Head>
             <div className='flex flex-col gap-8 flex-1 capitalize '>
@@ -234,9 +234,9 @@ export default function Listing() {
 
                 {/*  car listing details  */}
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-2 sm:grid-cols-2 gap-4'>
                         {applicationDataOrder.map((entry, entryIndex) => (
-                            <div className='flex items-center gap-4' key={entryIndex}>
+                            <div className='flex items-center gap-4 ' key={entryIndex}>
                                 <p className='capitalize font-semibold w-24 sm:w-32'>{labelMapping[entry]}</p>
                                 <input
                                     className='bg-transparent capitalize w-full outline-none border-none'

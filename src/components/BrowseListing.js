@@ -238,24 +238,10 @@ export default function BrowseListings() {
         }
     }, [pathname]);
 
-    const defaultDescription = "Superfast cool vehicles for sale";
-    const defaultImage = "/default-image.jpg";
 
     return (
         <>
-            <Head>
-                <title>{listingData ? `${listingData.year} ${listingData.company} ${listingData.model}` : "Listing"}</title>
-                <meta
-                    name="description"
-                    content={listingData ? listingData.carDescription : defaultDescription}
-                />
-                <meta property="og:title" content={listingData ? `${listingData.year} ${listingData.company} ${listingData.model}` : "Listing"} />
-                <meta property="og:description" content={listingData ? listingData.carDescription : defaultDescription} />
-                <meta property="og:image" content={listingData && listingData.images.length > 0 ? listingData.images[0] : defaultImage} />
-                <meta property="og:url" content={`https://yourdomain.com${pathname}`} />
-                <meta property="og:type" content="website" />
-            </Head>
-
+        
             {showModal && (
                 <Modal handleCloseModal={() => { setShowModal(null) }}>
                     {/* Add modal content here */}
@@ -343,7 +329,7 @@ export default function BrowseListings() {
                                 return (
                                     <div className='grid grid-cols-1 gap-4' key={index}>
                                         <Link href={'/browse/listing?id=' + (applicationMeta?.id || listing.id)}>
-                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:border-indigo-300 w-full'>
+                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:shadow-inner w-full'>
                                                 <div className="slider flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none' }}>
                                                     {images.map((image, imgIndex) => (
                                                         <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="w-full h-52 sm:h-100 object-cover flex-shrink-0" />

@@ -13,6 +13,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Head from 'next/head';
 import Modal from './Modal';
+
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
@@ -232,14 +233,13 @@ export default function Listing() {
                             <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
                                 {imagePostings.map((image, index) => (
                                   <div key={index} className="relative w-full flex-shrink-0">
-                                      <img src={image} alt={`slide-${index}`} className="image max-h-128 max-w-128" style={{ width: '100%', flex: 'none' }} />
-                                      <button
-                                             onClick={() => openModal(image)}
-                                              className="absolute bottom-2 right-2 bg-gray-600 text-white rounded-full opacity-75 hover:opacity-100 px-5 py-1 flex items-center gap-2">
-                                                 <p>Expand</p>
-                                                <i className="fa-solid fa-up-right-and-down-left-from-center"></i>
-                                            </button>
-
+                                      <img 
+                                          src={image} 
+                                          alt={`slide-${index}`} 
+                                          className="image max-h-128 max-w-128 cursor-pointer" 
+                                          style={{ width: '100%', flex: 'none' }} 
+                                          onClick={() => openModal(image)}
+                                      />
                                   </div>
                                 ))}
                             </div>

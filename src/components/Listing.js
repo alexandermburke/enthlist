@@ -12,6 +12,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Head from 'next/head';
+import Modal from './Modal'; // Import the Modal component
 
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
@@ -40,8 +41,8 @@ export default function Listing() {
         sellertype: ''
     };
 
-    const applicationDataOrder = ['company', 'model', 'status', 'miles', 'exterior', 'interior', 'seats', 'transmission']; 
-    const sellerDataOrder = ['city', 'state', 'instagram', 'contactname', 'sellertype'];
+    const applicationDataOrder = ['company', 'status', 'model', 'miles', 'exterior', 'seats', 'interior', 'transmission']; 
+    const sellerDataOrder = ['city', 'instagram', 'state', 'contactname', 'sellertype'];
 
     const [applicationMeta, setApplicationMeta] = useState(defaultApplicationData);
     const [sellerMeta, setSellerMeta] = useState(defaultSellerData);
@@ -88,18 +89,18 @@ export default function Listing() {
         company: 'Make',
         model: 'Model',
         year: 'Year',
-        status: 'Title Status',
+        status: 'Title',
         id: 'VIN',
         miles: 'Miles',
-        exterior: 'Exterior Color',
-        interior: 'Interior Color',
+        exterior: 'Exterior',
+        interior: 'Interior',
         seats: 'Seats',
-        transmission: 'Transmission',
+        transmission: 'Trans',
         price: 'Asking Price',
         images: 'Images',
         city: 'City',
-        sellertype: 'Seller Type',
-        contactname: 'Contact Name',
+        sellertype: 'Type',
+        contactname: 'Name',
         state: 'State',
         instagram: 'Instagram'
     };
@@ -157,6 +158,18 @@ export default function Listing() {
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [transitions, setTransitions] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+    const [selectedImage, setSelectedImage] = useState(''); // State to manage selected image for modal
+
+    const openModal = (imageSrc) => {
+        setSelectedImage(imageSrc);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedImage('');
+    };
 
     useEffect(() => {
         if (imagePostings.length > 1) {
@@ -219,7 +232,16 @@ export default function Listing() {
                         <div className='relative rounded-2xl border border-solid border-indigo-50 duration-200 overflow-hidden blueShadow max-h-128 max-w-128'>
                             <div className="slider" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions ? 'transform 0.5s ease-in-out' : 'none', display: 'flex' }}>
                                 {imagePostings.map((image, index) => (
-                                  <img key={index} src={image} alt={`slide-${index}`} className="image max-h-128 max-w-128" style={{ width: '100%', flex: 'none' }} />
+                                  <div key={index} className="relative w-full flex-shrink-0">
+                                      <img src={image} alt={`slide-${index}`} className="image max-h-128 max-w-128" style={{ width: '100%', flex: 'none' }} />
+                                      <button
+                                             onClick={() => openModal(image)}
+                                              className="absolute bottom-2 right-2 bg-gray-600 text-white rounded-full opacity-75 hover:opacity-100 px-5 py-1 flex items-center gap-2">
+                                                 <p>Expand</p>
+                                                <i className="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                            </button>
+
+                                  </div>
                                 ))}
                             </div>
                             <button onClick={handlePrevClick} className='absolute left-1 top-1/2 transform -translate-y-1/2 bg-gray-600 text-white px-2 py-6 rounded-full opacity-75 hover:opacity-100'>
@@ -253,7 +275,7 @@ export default function Listing() {
                         <p className={'font-medium text-lg blueGradient sm:text-xl md:text-1xl py-2'}>{'Contact Seller'} </p>
                         <p className="opacity-80 text-xs sm:text-sm italic capitalize">{'Beta Version'}</p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
                     {sellerDataOrder.map((entry, entryIndex) => (
                             <div className='flex items-center gap-4' key={entryIndex}>
                                 <p className='capitalize font-semibold w-30 sm:w-36'>{labelMapping[entry]}</p>
@@ -268,11 +290,18 @@ export default function Listing() {
                     </div>
 
                     {/*  car listing detail buttons  */}
+                    <div className='grid grid-cols-1 shrink-0'>
+                                {/* div for spacing */}
+                            </div>
+                              <div className='grid grid-cols-1 shrink-0'>
+                                {/* div for spacing */}
+                            </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                         <p className=''>Message Seller</p>
                         <i className="fa-regular fa-comments"></i>
                     </Link>
+                
                         <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>Report Listing</p>
                         </button>
@@ -286,6 +315,9 @@ export default function Listing() {
                     </InputWrapper>
                 </ActionCard>
             </div>
+
+            {/* Modal for enlarged image */}
+            <Modal isOpen={isModalOpen} closeModal={closeModal} imageSrc={selectedImage} />
         </>
     );
 }

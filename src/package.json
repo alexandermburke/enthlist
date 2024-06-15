@@ -10,6 +10,7 @@
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook --skip-verify"
   },
   "dependencies": {
+    "@headlessui/react": "^2.0.4",
     "@heroicons/react": "^1.0.6",
     "ai": "^2.2.36",
     "dotenv": "^16.4.5",

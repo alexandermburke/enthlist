@@ -329,7 +329,7 @@ export default function BrowseListings() {
                                 return (
                                     <div className='grid grid-cols-1 gap-4' key={index}>
                                         <Link href={'/browse/listing?id=' + (applicationMeta?.id || listing.id)}>
-                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-blue-50 overflow-hidden blueShadow hover:shadow-inner w-full'>
+                                            <div className='relative rounded-2xl border border-solid border-blue-50 duration-200 hover:bg-indigo-50 overflow-hidden blueShadow hover:shadow-xl w-full'>
                                                 <div className="slider flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentImageIndex * 100}%)`, transition: transitions[index] ? 'transform 0.5s ease-in-out' : 'none' }}>
                                                     {images.map((image, imgIndex) => (
                                                         <img key={imgIndex} src={image} alt={`slide-${imgIndex}`} className="w-full h-52 sm:h-100 object-cover flex-shrink-0" />

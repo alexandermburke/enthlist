@@ -1,19 +1,22 @@
-import React from 'react'
-import ReactDom from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-export default function Modal(props) {
-    const { handleCloseModal, children } = props
+export default function Modal({ isOpen, closeModal, imageSrc }) {
+    if (!isOpen) return null;
 
-    return ReactDom.createPortal(
-        <div className='fixed top-0 left-0 h-screen w-screen z-[1000] flex flex-col justify-center items-center'>
-            <div onClick={handleCloseModal} className='absolute inset-0 z-[-1] bg-slate-900 opacity-30'></div>
-            <div className='flex flex-col justify-center w-fit mx-auto p-4 max-h-[70%]'>
-                <div className='p-4 sm:p-8 rounded-lg bg-white max-w-[600px] w-full mx-auto  flex flex-col  dropShadow overflow-scroll'>
-                    {children}
-                </div>
+    return ReactDOM.createPortal(
+        <div className='fixed top-0 left-0 h-screen w-screen z-[1000] flex justify-center items-center'>
+            <div onClick={closeModal} className='absolute inset-0 z-0 bg-slate-900 opacity-90'></div>
+            <div className='relative flex justify-center items-center w-full h-full'>
+                <img src={imageSrc} alt="Enlarged" className="max-h-full max-w-full object-cover" />
+                <button
+                    onClick={closeModal}
+                    className="absolute top-4 right-4 p-2 text-white bg-red-500 rounded-full"
+                >
+                    &times;
+                </button>
             </div>
-        </div >,
+        </div>,
         document.getElementById('portal')
-    )
-
+    );
 }

@@ -12,8 +12,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Head from 'next/head';
-import Modal from './Modal'; // Import the Modal component
-
+import Modal from './Modal';
 const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
@@ -288,24 +287,26 @@ export default function Listing() {
                             </div>
                         ))}
                     </div>
+                    
+                                {/* div for spacing */} 
+                              <div className='grid grid-cols-1 shrink-0'/>
+                              <div className='grid grid-cols-1 shrink-0'/>
+                             
+                        
+                        {/*  car listing detail buttons  */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                             <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='duration-200 overflow-hidden p-0.5 rounded-full relative flex items-center w-48 sm:w-58'>
+                                           <div className='absolute inset-0 blueBackground' />
+                                        <div className='h-10 px-3 py-2 flex items-center justify-between relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white w-full'>
+                                        <p className=''>Message Seller</p>
+                                       <i className="fa-regular fa-comments"></i>
+                                    </div>
+                                 </Link>
 
-                    {/*  car listing detail buttons  */}
-                    <div className='grid grid-cols-1 shrink-0'>
-                                {/* div for spacing */}
+                                 <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
+                                   <p className=''>Report Listing</p>
+                                 </button>
                             </div>
-                              <div className='grid grid-cols-1 shrink-0'>
-                                {/* div for spacing */}
-                            </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='flex items-center justify-center w-48 sm:w-58 border border-solid border-indigo-200 gap-2 px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                    <p className=''>Message Seller</p>
-                        <i className="fa-regular fa-comments"></i>
-                    </Link>
-                
-                        <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                            <p className=''>Report Listing</p>
-                        </button>
-                    </div>
                 </ActionCard>
 
                 {/*  description  */}

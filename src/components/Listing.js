@@ -171,6 +171,16 @@ export default function Listing() {
         setSelectedImage('');
     };
 
+    const handlePrevClick = () => {
+        setSelectedImage(imagePostings[(currentImageIndex - 1 + imagePostings.length) % imagePostings.length]);
+        setCurrentImageIndex((currentImageIndex - 1 + imagePostings.length) % imagePostings.length);
+    };
+
+    const handleNextClick = () => {
+        setSelectedImage(imagePostings[(currentImageIndex + 1) % imagePostings.length]);
+        setCurrentImageIndex((currentImageIndex + 1) % imagePostings.length);
+    };
+
     useEffect(() => {
         if (imagePostings.length > 1) {
             const intervalId = setInterval(() => {
@@ -189,16 +199,6 @@ export default function Listing() {
 
         return () => clearTimeout(timeoutId);
     }, [currentImageIndex]);
-
-    const handlePrevClick = () => {
-        setTransitions(true);
-        setCurrentImageIndex(prevIndex => (prevIndex - 1 + imagePostings.length) % imagePostings.length);
-    };
-
-    const handleNextClick = () => {
-        setTransitions(true);
-        setCurrentImageIndex(prevIndex => (prevIndex + 1) % imagePostings.length);
-    };
 
     if (!applicationMeta.id) {
         return (
@@ -297,8 +297,8 @@ export default function Listing() {
                                 {/* div for spacing */}
                             </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='flex items-center w-48 sm:w-58 justify-center blueShadow gap-2 border border-solid border-white px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                        <p className=''>Message Seller</p>
+                    <Link href={'/browse/message?id=' + (applicationMeta?.id || listing.id)} className='flex items-center justify-center w-48 sm:w-58 border border-solid border-indigo-200 gap-2 px-3 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
+                    <p className=''>Message Seller</p>
                         <i className="fa-regular fa-comments"></i>
                     </Link>
                 
@@ -317,7 +317,13 @@ export default function Listing() {
             </div>
 
             {/* Modal for enlarged image */}
-            <Modal isOpen={isModalOpen} closeModal={closeModal} imageSrc={selectedImage} />
+            <Modal
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+                imageSrc={selectedImage}
+                handlePrevClick={handlePrevClick}
+                handleNextClick={handleNextClick}
+            />
         </>
     );
 }

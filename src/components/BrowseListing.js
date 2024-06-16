@@ -131,6 +131,17 @@ export default function BrowseListings() {
         return () => clearTimeout(timeoutId);
     }, [currentImageIndexes]);
 
+    const handleSearch = async (searchQuery) => {
+        const lowercasedQuery = searchQuery.toLowerCase();
+        const searchResults = listings.filter(listing => {
+            const { applicationMeta } = listing;
+            return Object.values(applicationMeta).some(value => 
+                value.toString().toLowerCase().includes(lowercasedQuery)
+            );
+        });
+        setFilteredListings(searchResults);
+    };
+
     const handlePrevClick = (index) => {
         setTransitions(prevTransitions => ({ ...prevTransitions, [index]: true }));
         setCurrentImageIndexes(prevIndexes => {
@@ -249,7 +260,7 @@ export default function BrowseListings() {
             )}
 
             <div className='flex flex-col gap-4 flex-none'>
-                <SearchBtn centerAligned />
+                <SearchBtn centerAligned onSearch={handleSearch} />
                 <div className='flex justify-between items-center gap-4'>
                     <button onClick={toggleFilterTab} className='duration-200 overflow-hidden p-0.5 rounded-full relative'>
                         <div className='absolute inset-0 blueBackground' />

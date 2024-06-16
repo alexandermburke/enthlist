@@ -2,17 +2,17 @@
 import { Poppins } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+
 const poppins = Poppins({ subsets: ["latin"], weight: ['400', '100', '200', '300', '500', '600', '700'] });
 
 export default function RegisterBtn(props) {
-    const { leftAligned, noBtn } = props
-    const [search, setsearch] = useState('')
-    const router = useRouter()
+    const { leftAligned, noBtn, onSearch } = props;
+    const [search, setsearch] = useState('');
 
     function validatesearch() {
-        if (!search) { return }
-        router.push('/browse?search=' + search)
+        if (!search) { return; }
+        onSearch(search);
     }
 
     return (
@@ -24,12 +24,11 @@ export default function RegisterBtn(props) {
             <button onClick={validatesearch} className='ml-4  duration-200 overflow-hidden  p-0.5 rounded-full relative blueShadow '>
                 <div className='absolute inset-0 blueBackground ' />
                 <div className={'h-full px-4 grid place-items-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white  ' + poppins.className}>
-                    <p >
+                    <p>
                         Search
                     </p>
                 </div>
             </button>
-
         </div>
-    )
+    );
 }

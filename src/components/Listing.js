@@ -211,14 +211,7 @@ export default function Listing() {
 
     return (
         <>
-            <Head>
-                <title>{`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`}</title>
-                <meta property="og:title" content={`${applicationMeta.year} ${applicationMeta.company} ${applicationMeta.model}`} />
-                <meta property="og:description" content={carDescription} />
-                <meta property="og:image" content={imagePostings[0] || '/image0.jpg'} />
-                <meta property="og:url" content={`https://enthusiastlist.app/browse/listing/${applicationMeta.id}`} />
-                <meta property="og:type" content="website" />
-            </Head>
+         
             <div className='flex flex-col gap-8 flex-1 capitalize '>
                 <div className='flex items-center justify-between gap-4'>
                     <Link href={'/browse'} className='flex items-center mr-auto justify-center gap-4 bg-white px-4 py-2 rounded-full text-indigo-400 duration-200 hover:opacity-50'>

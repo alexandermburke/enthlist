@@ -301,7 +301,7 @@ export default function BrowseListings() {
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </button>
                                             {dropdownVisibility[entry] && (
-                                                <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full'>
+                                                <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full max-h-40 overflow-y-scroll'>
                                                     {filterOptions[entry].map((option, optIndex) => {
                                                         return (
                                                             <button onClick={() => handleDropdownChange(option, entry)} className='p-2 capitalize' key={optIndex}>

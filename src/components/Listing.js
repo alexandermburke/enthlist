@@ -7,11 +7,9 @@ import InputWrapper from './InputWrapper';
 import { Open_Sans } from 'next/font/google';
 import LogoFiller from './LogoFiller';
 import { useAuth } from '@/context/AuthContext';
-import { db, storage } from '@/firebase';
+import { db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Head from 'next/head';
 import Modal from './Modal';
 
 const opensans = Open_Sans({
@@ -31,7 +29,8 @@ export default function Listing() {
         seats: '',
         transmission: '',
         price: '',
-        images: [] // Array to store multiple image URLs
+        images: [], // Array to store multiple image URLs
+        datePosted: '' // Add datePosted to the applicationMeta
     };
     let defaultSellerData = {
         city: '',
@@ -50,7 +49,7 @@ export default function Listing() {
     const [imagePostings, setImagePostings] = useState([]); // Array to store multiple image URLs
     const [isLoading, setIsLoading] = useState(false);
 
-    const { userDataObj, currentUser, setUserDataObj } = useAuth();
+    const { userDataObj } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -102,7 +101,8 @@ export default function Listing() {
         sellertype: 'Type',
         contactname: 'Name',
         state: 'State',
-        instagram: 'Instagram'
+        instagram: 'Instagram',
+        datePosted: 'Date Posted'
     };
 
     useEffect(() => {
@@ -200,6 +200,14 @@ export default function Listing() {
         return () => clearTimeout(timeoutId);
     }, [currentImageIndex]);
 
+    const calculateDaysSincePosting = (datePosted) => {
+        const today = new Date();
+        const postedDate = new Date(datePosted);
+        const differenceInTime = today - postedDate;
+        const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+        return differenceInDays;
+    };
+
     if (!applicationMeta.id) {
         return (
             <>
@@ -296,9 +304,13 @@ export default function Listing() {
                                     </div>
                                  </Link>
 
-                                 <button onClick={() => {}} className='flex items-center w-48 sm:w-58 justify-center gap-2 border border-solid border-white px-3 py-2 bg-indigo-50 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
-                                   <p className=''>Report Listing</p>
-                                 </button>
+                                 <Link href={'/browse/report?id=' + (applicationMeta?.id || listing.id)} className='duration-200 overflow-hidden p-0.5 rounded-full relative flex items-center w-48 sm:w-58'>
+                                    <div className='absolute inset-0 blueBackground' />
+                                    <div className='h-10 px-3 py-2 flex items-center justify-center relative z-10 bg-white rounded-full hover:bg-transparent duration-200 hover:text-white w-full'>
+                                    <p className='flex items-center justify-center w-full text-center'>Report Listing</p>
+                                </div>
+                            </Link>
+
                             </div>
                 </ActionCard>
 
@@ -307,6 +319,7 @@ export default function Listing() {
                     <InputWrapper value={carDescription}>
                         <textarea value={carDescription} placeholder='No description ...' onChange={(e) => setCarPosting(e.target.value)} className='unstyled h-full resize-none absolute inset-0'></textarea>
                     </InputWrapper>
+                    <p className='mt-4 text-gray-500'>{`Posted ${calculateDaysSincePosting(applicationMeta.datePosted)} days ago`}</p> 
                 </ActionCard>
             </div>
 

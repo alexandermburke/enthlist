@@ -12,7 +12,7 @@ import LogoFiller from './LogoFiller';
 import Modal from './Modal';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { filterOptions, sortOptions } from '../utils/filterOptions';
+import { filterOptions, companyModelMapping, sortOptions } from '../utils/filterOptions';
 import Head from 'next/head';
 
 const ITEMS_PER_PAGE = 4;
@@ -183,7 +183,8 @@ export default function BrowseListings() {
     const handleDropdownChange = (value, key) => {
         setApplicationMeta({
             ...applicationMeta,
-            [key]: value
+            [key]: value,
+            ...(key === 'company' && { model: '' }) // Reset model if company changes
         });
         setDropdownVisibility({
             ...dropdownVisibility,
@@ -297,18 +298,24 @@ export default function BrowseListings() {
                                     return (
                                         <div className='flex flex-col gap-1 w-full relative' key={entryIndex}>
                                             <button onClick={() => toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg')}>
-                                                <p className='capitalize'>{applicationMeta[entry] || `Select ${entry}`}</p>
+                                                <p className={'capitalize ' + (entry === 'model' && !applicationMeta.company ? 'text-gray-400' : '')}>{applicationMeta[entry] || `Select ${entry}`}</p>
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </button>
                                             {dropdownVisibility[entry] && (
                                                 <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full max-h-40 overflow-y-scroll'>
-                                                    {filterOptions[entry].map((option, optIndex) => {
-                                                        return (
+                                                    {(entry === 'model' && applicationMeta.company) ? (
+                                                        companyModelMapping[applicationMeta.company].map((option, optIndex) => (
                                                             <button onClick={() => handleDropdownChange(option, entry)} className='p-2 capitalize' key={optIndex}>
                                                                 <p className={'duration-200 ' + (option === applicationMeta[entry] ? 'font-medium' : '')}>{option}</p>
                                                             </button>
-                                                        );
-                                                    })}
+                                                        ))
+                                                    ) : (
+                                                        filterOptions[entry].map((option, optIndex) => (
+                                                            <button onClick={() => handleDropdownChange(option, entry)} className='p-2 capitalize' key={optIndex} disabled={entry === 'model' && !applicationMeta.company}>
+                                                                <p className={'duration-200 ' + (option === applicationMeta[entry] ? 'font-medium' : '')}>{option}</p>
+                                                            </button>
+                                                        ))
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

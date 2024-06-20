@@ -10,7 +10,7 @@ import Button from './Button';
 import LogoFiller from './LogoFiller';
 import { useAuth } from '@/context/AuthContext';
 import { db, storage } from '@/firebase';
-import { doc, updateDoc, setDoc, collection } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, collection, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Modal from './Modal';
@@ -19,7 +19,7 @@ const opensans = Open_Sans({
     subsets: ["latin"], weight: ['400', '300', '500', '600', '700'], style: ['normal', 'italic'],
 });
 
-export default function Listing() {
+export default function Application() {
     let defaultApplicationData = {
         company: '',
         model: '',
@@ -32,7 +32,8 @@ export default function Listing() {
         seats: '',
         transmission: '',
         price: '',
-        images: [] // Array to store multiple image URLs
+        images: [], // Array to store multiple image URLs
+        datePosted: '' // Add datePosted to the applicationMeta
     };
     let defaultSellerData = {
         city: '',
@@ -114,7 +115,7 @@ export default function Listing() {
             const currData = localStorage.getItem('hyr') ? JSON.parse(localStorage.getItem('hyr')) : {};
             const newListing = {
                 [applicationMeta.id]: {
-                    applicationMeta: { ...applicationMeta, images: imagePostings },
+                    applicationMeta: { ...applicationMeta, images: imagePostings, datePosted: new Date().toISOString() }, // Save the current date
                     carDescription,
                     SellerMeta
                 }
@@ -140,6 +141,32 @@ export default function Listing() {
             setIsLoading(false);
         }
     }
+
+    const handleDeleteListing = async () => {
+        if (!applicationMeta.id) return;
+        
+        setIsLoading(true);
+
+        try {
+            // Delete the listing from Firestore
+            const listingsRef = doc(db, 'listings', applicationMeta.id);
+            await deleteDoc(listingsRef);
+
+            // Update the local state
+            const newData = { ...userDataObj };
+            delete newData.listings[applicationMeta.id];
+            setUserDataObj(newData);
+            localStorage.setItem('hyr', JSON.stringify(newData));
+
+            // Redirect to the listings page after deletion
+            router.push('/admin');
+        } catch (error) {
+            console.error('Failed to delete listing:', error);
+            setError('Failed to delete listing');
+        } finally {
+            setIsLoading(false);
+        }
+    };
     
     useEffect(() => {
         if (!userDataObj || !searchParams) { return }
@@ -237,7 +264,7 @@ export default function Listing() {
                 </div>
                 <ActionCard title={'Car Listing Details'} subTitle={applicationMeta.id}>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                        {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images').map((entry, entryIndex) => {
+                        {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images' && val !== 'datePosted').map((entry, entryIndex) => {
                             return (
                                 <div className='flex items-center gap-4' key={entryIndex}>
                                     <p className='capitalize font-medium w-24 sm:w-32'>{entry}{['company', 'role'].includes(entry) ? '' : ''}</p>
@@ -307,7 +334,7 @@ export default function Listing() {
                     <p className='opacity-80 text-xs sm:text-sm italic'>Please wait until all pictures are displayed before uploading</p>
                 </ActionCard>
                 {applicationMeta.id && (
-                    <div className='grid grid-cols-2 gap-4 sm:w-fit'>
+                    <div className='grid grid-cols-3 gap-4 sm:w-fit'>
                         <button onClick={handleSaveListing} className='flex items-center justify-center gap-2 border border-solid border-white bg-white p-4 rounded-full text-indigo-400 duration-200 hover:opacity-50'>
                             <p className=''>{isLoading ? 'Saving' : 'Save'}</p>
                             <i className="fa-solid fa-floppy-disk"></i>
@@ -316,6 +343,10 @@ export default function Listing() {
                             <p className=''>PDF Viewer</p>
                             <i className="fa-solid fa-arrow-up-right-from-square"></i>
                         </Link>
+                        <button onClick={handleDeleteListing} className='flex items-center justify-center gap-2 border border-solid bg-white p-4 rounded-full text-red-500 duration-200 hover:opacity-75'>
+                            <p className=''>Delete</p>
+                            <i className="fa-solid fa-trash"></i>
+                        </button>
                     </div>
                 )}
             </div>

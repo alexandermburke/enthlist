@@ -297,7 +297,7 @@ export default function BrowseListings() {
                                     const isDisabled = entry !== 'company' && !applicationMeta.company;
                                     return (
                                         <div className='flex flex-col gap-1 w-full relative' key={entryIndex}>
-                                            <button onClick={() => !isDisabled && toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg') + (isDisabled ? ' opacity-50 cursor-not-allowed' : '')}>
+                                            <button onClick={() => !isDisabled && toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg') + (isDisabled ? ' text-gray-400 cursor-not-allowed' : '')}>
                                                 <p className={'capitalize ' + (entry === 'model' && !applicationMeta.company ? 'text-gray-400' : '')}>{applicationMeta[entry] || `Select ${entry}`}</p>
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </button>

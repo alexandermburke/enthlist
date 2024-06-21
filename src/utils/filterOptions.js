@@ -12,8 +12,8 @@ const filterOptions = {
         '2007', '2006', '2005', '2004', '2003', '2002', '2001', '2000'
     ],
     status: ['clean', 'Rebuilt', 'Salvage', 'lemon', 'other'],
-    exterior: ['black', 'white', 'blue', 'grey', 'red', 'orange', 'yellow', 'green', 'biege', 'brown'],
-    interior: ['black', 'white', 'blue', 'grey', 'red', 'orange', 'yellow', 'green', 'biege', 'brown'],
+    exterior: ['black', 'white', 'silver', 'blue', 'grey', 'red', 'orange', 'yellow', 'green', 'biege', 'brown'],
+    interior: ['black', 'white', 'silver', 'blue', 'grey', 'red', 'orange', 'yellow', 'green', 'biege', 'brown'],
     seats: ['competition', 'base', 'recaro', 'sparco'],
     transmission: ['DCT', 'Manual', 'ZF8', 'Automatic']
 };

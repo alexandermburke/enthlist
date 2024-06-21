@@ -250,7 +250,6 @@ export default function BrowseListings() {
         }
     }, [pathname]);
 
-
     return (
         <>
         
@@ -295,13 +294,14 @@ export default function BrowseListings() {
                         <FilterCard title={'Filters'}>
                             <div className='flex flex-col gap-4'>
                                 {sortDetails(Object.keys(applicationMeta)).filter(val => val !== 'id' && val !== 'images' && val !== 'price' && val !== 'miles').map((entry, entryIndex) => {
+                                    const isDisabled = entry !== 'company' && !applicationMeta.company;
                                     return (
                                         <div className='flex flex-col gap-1 w-full relative' key={entryIndex}>
-                                            <button onClick={() => toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg')}>
+                                            <button onClick={() => !isDisabled && toggleDropdown(entry)} className={'flex items-center gap-4 justify-between p-2 border border-solid border-slate-100 rounded-t-lg ' + (dropdownVisibility[entry] ? '' : ' rounded-b-lg') + (isDisabled ? ' opacity-50 cursor-not-allowed' : '')}>
                                                 <p className={'capitalize ' + (entry === 'model' && !applicationMeta.company ? 'text-gray-400' : '')}>{applicationMeta[entry] || `Select ${entry}`}</p>
                                                 <i className="fa-solid fa-chevron-down"></i>
                                             </button>
-                                            {dropdownVisibility[entry] && (
+                                            {dropdownVisibility[entry] && !isDisabled && (
                                                 <div className='flex flex-col border-l rounded-b-lg border-b border-r border-solid border-slate-100 bg-white z-[10] absolute top-full left-0 w-full max-h-40 overflow-y-scroll'>
                                                     {(entry === 'model' && applicationMeta.company) ? (
                                                         companyModelMapping[applicationMeta.company].map((option, optIndex) => (
